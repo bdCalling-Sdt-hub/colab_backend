@@ -4,7 +4,7 @@ import sendResponse from "../../utilities/sendResponse";
 import SubscriptionService from "./subscription.service";
 
 const purchaseSubscription = catchAsync(async (req, res) => {
-    const result = await SubscriptionService.purchaseSubscription(
+    const result = await SubscriptionService.purchaseSubscription(req.user.profileId
     );
     sendResponse(res, {
       statusCode: httpStatus.OK,
