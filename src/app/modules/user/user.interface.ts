@@ -16,6 +16,7 @@ export interface TUser {
   codeExpireIn: Date;
   isActive: boolean;
   isDeleted: boolean;
+  isPremium:false;
 }
 export interface TLoginUser {
   email: string;

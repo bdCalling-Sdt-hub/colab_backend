@@ -27,7 +27,7 @@ const NormalUserSchema = new Schema<INormalUser>(
     },
     mainSkill:{
       type:String,
-      required:true
+      // required:true
     },
     additionalSkills:{
       type:[String],

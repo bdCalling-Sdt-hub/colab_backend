@@ -10,7 +10,7 @@ const router = Router();
 
 router.post(
   '/register-user',
-  validateRequest(normalUserValidations.createNormalUserSchema),
+  validateRequest(normalUserValidations.normalUserUpdateValidationSchema),
   userControllers.registerUser,
 );
 

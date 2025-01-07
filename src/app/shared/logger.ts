@@ -18,7 +18,7 @@ const logDir = path.join(process.cwd(), 'logs', 'winston');
 
 export const logger = createLogger({
   level: 'info',
-  format: combine(label({ label: 'Mongoose Template' }), timestamp(), myFormat),
+  format: combine(label({ label: 'Colab App' }), timestamp(), myFormat),
   transports: [
     new transports.Console(),
     new transports.File({
