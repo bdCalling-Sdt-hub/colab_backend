@@ -44,6 +44,10 @@ const NormalUserSchema = new Schema<INormalUser>(
     subscriptionExpiryDate: {
       type: Date,
     },
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

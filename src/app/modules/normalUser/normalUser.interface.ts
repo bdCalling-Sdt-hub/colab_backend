@@ -13,4 +13,5 @@ export interface INormalUser {
   videos: [string];
   subscriptionPurchaseDate?: Date;
   subscriptionExpiryDate?: Date;
+  isPremium: false;
 }
