@@ -1,16 +1,16 @@
-
+import Category from '../category/category.model';
 import NormalUser from '../normalUser/normalUser.model';
-
 
 const getDashboardMetaData = async () => {
   const totalUser = await NormalUser.countDocuments();
-
-  return { totalUser};
+  const totalCategory = await Category.countDocuments();
+  const totalSubscriber = 100;
+  const totalEarning = 100;
+  return { totalUser, totalSubscriber, totalEarning, totalCategory };
 };
 
 const getUserChartData = async (year: number) => {
-
-  const startOfYear = new Date(year, 0, 1); 
+  const startOfYear = new Date(year, 0, 1);
 
   const endOfYear = new Date(year + 1, 0, 1);
 
