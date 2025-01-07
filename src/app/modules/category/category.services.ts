@@ -9,7 +9,6 @@ const createCategoryIntoDB = async (payload: ICategory) => {
   const result = await Category.create(payload);
   return result;
 };
-
 const updateCategoryIntoDB = async (
   id: string,
   payload: Partial<ICategory>,

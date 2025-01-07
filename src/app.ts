@@ -11,6 +11,13 @@ import router from './app/routes';
 import notFound from './app/middlewares/notFound';
 const app: Application = express();
 import sendContactUsEmail from './app/helper/sendContactUsEmail';
+import handleWebhook from './app/stripe/webhook';
+// web hook
+app.post(
+  '/saving-app/webhook',
+  express.raw({ type: 'application/json' }),
+  handleWebhook,
+);
 
 // parser
 app.use(express.json());

@@ -3,7 +3,6 @@ import { userRoutes } from '../modules/user/user.routes';
 import { authRoutes } from '../modules/auth/auth.routes';
 import { ManageRoutes } from '../modules/manage-web/manage.routes';
 import { normalUserRoutes } from '../modules/normalUser/normalUser.routes';
-
 import { notificationRoutes } from '../modules/notification/notification.routes';
 import { categoryRoutes } from '../modules/category/category.routes';
 
@@ -22,7 +21,6 @@ const moduleRoutes = [
     path: '/normal-user',
     router: normalUserRoutes,
   },
-
   {
     path: '/manage',
     router: ManageRoutes,
