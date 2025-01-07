@@ -18,7 +18,7 @@ router.patch(
     }
     next();
   },
-  validateRequest(normalUserValidations.updateNormalUserData),
+  validateRequest(normalUserValidations.normalUserUpdateValidationSchema),
   NormalUserController.updateUserProfile,
 );
 
