@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 
-export const normalUserValidationSchema = z.object({
+ const normalUserValidationSchema = z.object({
   body:z.object({
     user: z.string().nonempty('User ID is required'),
     name: z.string().nonempty('Name is required'),
@@ -16,8 +16,23 @@ export const normalUserValidationSchema = z.object({
   })
 });
 
+const normalUserUpdateValidationSchema = z.object({
+  body:z.object({
+    name: z.string().optional(),
+    email: z.string().optional(),
+    address: z.string().optional(),
+    profile_image: z.string().optional().default(''),
+    mainSkill: z.string().optional(),
+    additionalSkills: z
+      .array(z.string())
+      .max(3, 'You can specify up to 3 additional skills only').optional(),
+  
+  })
+});
+
 const normalUserValidations = {
-  normalUserValidationSchema
+  normalUserValidationSchema,
+  normalUserUpdateValidationSchema
 }
 
 export default normalUserValidations;
