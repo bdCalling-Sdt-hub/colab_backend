@@ -97,7 +97,6 @@ const loginWithGoogle = async (payload: ILoginWithGoogle) => {
     // If user doesn't exist, create a new user
     const userDataPayload: Partial<TUser> = {
       email: payload.email,
-      phone: payload?.phone,
       role: USER_ROLE.user,
     };
 

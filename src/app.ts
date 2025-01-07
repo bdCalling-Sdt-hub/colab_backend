@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import express, { Application, Request, Response, application } from 'express';
+import express, { Application } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
@@ -14,7 +14,7 @@ import sendContactUsEmail from './app/helper/sendContactUsEmail';
 import handleWebhook from './app/stripe/webhook';
 // web hook
 app.post(
-  '/saving-app/webhook',
+  '/colab-app/webhook',
   express.raw({ type: 'application/json' }),
   handleWebhook,
 );
