@@ -21,12 +21,12 @@ const handleWebhook = async (req: Request, res: Response) => {
     switch (event.type) {
       case 'payment_intent.succeeded': {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        const { userId, subscriptionId } = paymentIntent.metadata;
+        const { userId, paymentPurpose } = paymentIntent.metadata;
 
         console.log(
-          `Payment successful for user ${userId}, subscription ${subscriptionId}`,
+          `Payment successful for user ${userId}, subscription ${userId}`,
         );
-        await handlePaymentSuccess();
+        await handlePaymentSuccess(userId, paymentPurpose);
         // Update subscription status in your database
         // E.g., Activate the subscription for the user
 
