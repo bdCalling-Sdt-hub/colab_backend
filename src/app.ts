@@ -10,11 +10,8 @@ import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import router from './app/routes';
 import notFound from './app/middlewares/notFound';
 const app: Application = express();
-import multer from 'multer';
-import auth from './app/middlewares/auth';
-import { USER_ROLE } from './app/modules/user/user.constant';
 import sendContactUsEmail from './app/helper/sendContactUsEmail';
-const upload = multer({ dest: 'uploads/' });
+
 // parser
 app.use(express.json());
 app.use(cookieParser());
