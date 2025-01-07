@@ -1,32 +1,24 @@
 import { z } from 'zod';
 
-export const createNormalUserSchema = z.object({
-  body: z.object({
-    password: z
-      .string({ required_error: 'Password is required' })
-      .min(6, { message: 'Password must be 6 character' }),
-    confirmPassword: z
-      .string({ required_error: 'Confirm password is required' })
-      .min(6, { message: 'Password must be 6 character' }),
-    userData: z.object({
-      name: z.string().nonempty('Name is required'),
-      phone: z.string().optional(),
-      email: z.string().email('Invalid email format'),
-      address: z.string().nonempty('Address is required').optional(),
-    }),
-  }),
-});
-export const updateNormalUserData = z.object({
-  body: z.object({
-    name: z.string().nonempty('Name is required').optional(),
-    phone: z.string().optional(),
+
+export const normalUserValidationSchema = z.object({
+  body:z.object({
+    user: z.string().nonempty('User ID is required'),
+    name: z.string().nonempty('Name is required'),
+    email: z.string().email('Invalid email address').nonempty('Email is required'),
     address: z.string().optional(),
-  }),
+    profile_image: z.string().optional().default(''),
+    mainSkill: z.string().nonempty('Main skill is required'),
+    additionalSkills: z
+      .array(z.string())
+      .max(3, 'You can specify up to 3 additional skills only'),
+  
+  })
 });
 
 const normalUserValidations = {
-  createNormalUserSchema,
-  updateNormalUserData,
-};
+  normalUserValidationSchema
+}
 
 export default normalUserValidations;
+
