@@ -55,8 +55,6 @@ const deleteCategoryFromDB = async (categoryId: string) => {
       );
     }
 
-    // await Service.deleteMany({ category: categoryId }, { session });
-
     await session.commitTransaction();
     session.endSession();
 
