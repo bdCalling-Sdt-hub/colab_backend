@@ -6,6 +6,4 @@ import SubscriptionController from "./subscription.controller";
 
 const router = express.Router();
 router.post("/purchase-subscription",auth(USER_ROLE.user),SubscriptionController.purchaseSubscription);
-
-
 export const subscriptionRoutes = router;
