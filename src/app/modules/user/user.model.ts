@@ -7,22 +7,16 @@ const userSchema = new Schema<TUser>(
   {
     email: {
       type: String,
-      required: function () {
-        return this.role === 'user'; // Only required if the role is 'user'
-      },
-      // unique: true,
+      required:true,
+      unique: true,
       match: [
         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
         'Please provide a valid email address',
       ],
     },
-    phone: {
-      type: String,
-      // unique: true,
-    },
     password: {
       type: String,
-      // required: true,
+      required: true,
     },
     passwordChangedAt: {
       type: Date,
