@@ -90,7 +90,7 @@ const resetPasswordEmailBody = (name: string, resetCode: number) => `
         </div>
         <div class="footer">
           <p>&copy; ${new Date().getFullYear()} Template. All rights reserved.</p>
-          <p><a href="https://yourwebsite.com/privacy">Privacy Policy</a> | <a href="https://yourwebsite.com/contact">Contact Us</a></p>
+          <p><a href="https://colab.com/privacy">Privacy Policy</a> | <a href="https://colab.com/contact">Contact Us</a></p>
         </div>
       </div>
     </body>
