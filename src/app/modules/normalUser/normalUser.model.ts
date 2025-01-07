@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { model, Schema } from 'mongoose';
 import { INormalUser } from './normalUser.interface';
 
@@ -12,11 +13,6 @@ const NormalUserSchema = new Schema<INormalUser>(
       type: String,
       required: true,
     },
-    phone: {
-      type: String,
-      // required: true,
-      // unique: true,
-    },
     email: {
       type: String,
       required: true,
@@ -24,12 +20,24 @@ const NormalUserSchema = new Schema<INormalUser>(
     },
     address: {
       type: String,
-      // required: true,
     },
     profile_image: {
       type: String,
       default: '',
     },
+    mainSkill:{
+      type:String,
+      required:true
+    },
+    additionalSkills:{
+      type:[String],
+      validate: {
+        validator: function (array:any) {
+          return array.length <= 3;
+        },
+        message: 'You can specify up to 3 additional skills only.'
+      }
+    }
   },
   {
     timestamps: true,
