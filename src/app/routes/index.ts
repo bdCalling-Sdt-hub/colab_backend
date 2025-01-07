@@ -5,6 +5,7 @@ import { ManageRoutes } from '../modules/manage-web/manage.routes';
 import { normalUserRoutes } from '../modules/normalUser/normalUser.routes';
 
 import { notificationRoutes } from '../modules/notification/notification.routes';
+import { categoryRoutes } from '../modules/category/category.routes';
 
 const router = Router();
 
@@ -30,6 +31,10 @@ const moduleRoutes = [
     path: '/notification',
     router: notificationRoutes,
   },
+  {
+    path:"/category",
+    router:categoryRoutes
+  }
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.router));
