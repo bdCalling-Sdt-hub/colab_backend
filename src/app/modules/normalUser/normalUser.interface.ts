@@ -2,14 +2,13 @@
 import { Types } from "mongoose";
 
 export interface INormalUser {
-    inviteToken: any;
     user:Types.ObjectId;
     name:string;
-    username:string;
-    phone:string;
+    bio:string;
     email:string;
-    address:string;
+    address?:string;
     profile_image:string;
-    totalAmount:number;
-    totalPoint:number;
+    mainSkill:string;
+    additionalSkills:[string];
+    videos:[string];
 }
