@@ -68,8 +68,6 @@ const deleteCategory = catchAsync(async (req, res) => {
   });
 });
 
-
-
 const categoryController = {
   createCategory,
   updateCategory,
