@@ -5,7 +5,6 @@ import { USER_ROLE } from './user.constant';
 export interface TUser {
   _id: string;
   email: string;
-  phone: string;
   password: string;
   passwordChangedAt?: Date;
   role: 'user' | 'admin' | 'superAdmin';
