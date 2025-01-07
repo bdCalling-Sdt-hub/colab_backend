@@ -68,84 +68,13 @@ const deleteCategory = catchAsync(async (req, res) => {
   });
 });
 
-// sub category ------------------------------------------
 
-const createSubCategory = catchAsync(async (req, res) => {
-  const { files } = req;
-
-  // Check if files and store_image exist, and process multiple images
-  if (files && typeof files === 'object' && 'sub_category_image' in files) {
-    req.body.image = files['sub_category_image'][0].path;
-  }
-
-  const result = await categoryService.createSubCategoryIntoDB(
-    req?.user?.profileId,
-    req?.body,
-  );
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Sub Category created successfully',
-    data: result,
-  });
-});
-
-const updateSubCategory = catchAsync(async (req, res) => {
-  const { files } = req;
-
-  // Check if files and store_image exist, and process multiple images
-  if (files && typeof files === 'object' && 'sub_category_image' in files) {
-    req.body.image = files['sub_category_image'][0].path;
-  }
-
-  const result = await categoryService.updateSubCategoryIntoDB(
-    req?.user?.profileId,
-    req?.params?.id,
-    req?.body,
-  );
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Sub Category updated successfully',
-    data: result,
-  });
-});
-
-// get my sub categories
-const getMySubCategories = catchAsync(async (req, res) => {
-  const result = await categoryService.getMySubCategoriesFromDB(
-    req?.user?.profileId,
-  );
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Sub Category retrieved successfully',
-    data: result,
-  });
-});
-// delete sub category
-const deleteSubCategory = catchAsync(async (req, res) => {
-  const result = await categoryService.deleteSubCategoryFromDB(
-    req?.user?.profileId,
-    req?.params?.id,
-  );
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Sub Category deleted successfully',
-    data: result,
-  });
-});
 
 const categoryController = {
   createCategory,
   updateCategory,
   getSingleCategory,
-  createSubCategory,
-  updateSubCategory,
   deleteCategory,
-  getMySubCategories,
-  deleteSubCategory,
   getAllCategories,
 };
 export default categoryController;
