@@ -7,7 +7,7 @@ const userSchema = new Schema<TUser>(
   {
     email: {
       type: String,
-      required:true,
+      required: true,
       unique: true,
       match: [
         /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
@@ -56,10 +56,10 @@ const userSchema = new Schema<TUser>(
       type: Boolean,
       default: false,
     },
-    isPremium:{
-      type:Boolean,
-      default:false
-    }
+    isPremium: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

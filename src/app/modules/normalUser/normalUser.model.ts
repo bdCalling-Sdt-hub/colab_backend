@@ -25,19 +25,25 @@ const NormalUserSchema = new Schema<INormalUser>(
       type: String,
       default: '',
     },
-    mainSkill:{
-    type:Schema.Types.ObjectId,
-    required:true
+    mainSkill: {
+      type: Schema.Types.ObjectId,
+      required: true,
     },
-    additionalSkills:{
-      type:[Schema.Types.ObjectId],
+    additionalSkills: {
+      type: [Schema.Types.ObjectId],
       validate: {
-        validator: function (array:any) {
+        validator: function (array: any) {
           return array.length <= 3;
         },
-        message: 'You can specify up to 3 additional skills only.'
-      }
-    }
+        message: 'You can specify up to 3 additional skills only.',
+      },
+    },
+    subscriptionPurchaseDate: {
+      type: Date,
+    },
+    subscriptionExpiryDate: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
