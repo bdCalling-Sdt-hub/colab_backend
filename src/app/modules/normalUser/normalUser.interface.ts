@@ -8,7 +8,7 @@ export interface INormalUser {
     email:string;
     address?:string;
     profile_image:string;
-    mainSkill:string;
-    additionalSkills:[string];
+    mainSkill:Types.ObjectId;
+    additionalSkills:[Types.ObjectId];
     videos:[string];
 }

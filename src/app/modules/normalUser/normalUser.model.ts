@@ -26,11 +26,11 @@ const NormalUserSchema = new Schema<INormalUser>(
       default: '',
     },
     mainSkill:{
-      type:String,
-      // required:true
+    type:Schema.Types.ObjectId,
+    required:true
     },
     additionalSkills:{
-      type:[String],
+      type:[Schema.Types.ObjectId],
       validate: {
         validator: function (array:any) {
           return array.length <= 3;
