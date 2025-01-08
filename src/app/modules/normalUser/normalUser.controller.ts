@@ -8,10 +8,7 @@ const updateUserProfile = catchAsync(async (req, res) => {
   if (files && typeof files === 'object' && 'profile_image' in files) {
     req.body.profile_image = files['profile_image'][0].path;
   }
-  const result = await NormalUserServices.updateUserProfile(
-    req.user.profileId,
-    req.body,
-  );
+  const result = await NormalUserServices.updateUserProfile(req.user, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

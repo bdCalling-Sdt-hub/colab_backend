@@ -27,7 +27,7 @@ const NormalUserSchema = new Schema<INormalUser>(
     },
     mainSkill: {
       type: Schema.Types.ObjectId,
-      required: true,
+      // required: true,
     },
     additionalSkills: {
       type: [Schema.Types.ObjectId],
