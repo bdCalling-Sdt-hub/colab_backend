@@ -5,10 +5,7 @@ import NormalUser from './normalUser.model';
 
 const updateUserProfile = async (id: string, payload: Partial<INormalUser>) => {
   if (payload.email) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      'You can not change the email',
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, 'You can not change the email');
   }
 
   const user = await NormalUser.findById(id);
@@ -22,8 +19,25 @@ const updateUserProfile = async (id: string, payload: Partial<INormalUser>) => {
   return result;
 };
 
+const addVideos = async (userId: string, videos: string[]) => {
+  const normalUser = await NormalUser.findById(userId);
+  if (!normalUser) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const result = await NormalUser.findByIdAndUpdate(
+    userId,
+    {
+      $set: { videos: videos },
+    },
+    { new: true, runValidators: true },
+  );
+  return result;
+};
+
 const NormalUserServices = {
   updateUserProfile,
+  addVideos,
 };
 
 export default NormalUserServices;

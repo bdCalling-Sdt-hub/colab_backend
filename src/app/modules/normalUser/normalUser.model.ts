@@ -48,6 +48,9 @@ const NormalUserSchema = new Schema<INormalUser>(
       type: Boolean,
       default: false,
     },
+    videos: {
+      type: [String],
+    },
   },
   {
     timestamps: true,
