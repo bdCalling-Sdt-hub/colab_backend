@@ -4,7 +4,11 @@ import NormalUser from '../modules/normalUser/normalUser.model';
 import Conversation from '../modules/conversation/conversation.model';
 import Message from '../modules/message/message.model';
 import { getConversation } from '../helper/gerConversation';
+// for uplaods
+import { promisify } from 'util';
+import upload from '../utilities/upload';
 
+const uploadSingle = promisify(upload.single('media'));
 const handleChat = async (
   io: IOServer,
   socket: Socket,
@@ -41,6 +45,20 @@ const handleChat = async (
 
   // new message -----------------------------------
   socket.on('new-message', async (data) => {
+    // Handle file upload
+    if (data.file) {
+      const mockReq = { body: {}, file: data.file };
+      const mockRes = {};
+      await uploadSingle(mockReq, mockRes);
+
+      const fileType = mockReq.file.mimetype.split('/')[0];
+      if (fileType === 'image')
+        data.imageUrl = `/uploads/message-media/image/${mockReq.file.filename}`;
+      if (fileType === 'video')
+        data.videoUrl = `/uploads/message-media/video/${mockReq.file.filename}`;
+      if (fileType === 'audio')
+        data.audioUrl = `/uploads/message-media/audio/${mockReq.file.filename}`;
+    }
     let conversation = await Conversation.findOne({
       $or: [
         { sender: data?.sender, receiver: data?.receiver },
@@ -58,6 +76,7 @@ const handleChat = async (
       text: data.text,
       imageUrl: data.imageUrl,
       videoUrl: data.videoUrl,
+      audioUrl: data.audioUrl,
       msgByUserId: data?.msgByUserId,
     };
     const saveMessage = await Message.create(messageData);

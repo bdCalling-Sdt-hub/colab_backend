@@ -21,7 +21,6 @@ const initializeSocket = (server: HTTPServer) => {
       if (!userId) {
         return;
       }
-      // const currentUser = await getUserDetails(userId);
       const currentUser = await NormalUser.findById(userId);
       if (!currentUser) {
         return;
