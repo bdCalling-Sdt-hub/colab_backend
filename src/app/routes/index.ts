@@ -35,7 +35,7 @@ const moduleRoutes = [
     router: categoryRoutes,
   },
   {
-    path: '/subscription',
+    path: '/subcription',
     router: subscriptionRoutes,
   },
 ];

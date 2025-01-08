@@ -4,10 +4,9 @@ import NormalUser from '../modules/normalUser/normalUser.model';
 import Conversation from '../modules/conversation/conversation.model';
 import Message from '../modules/message/message.model';
 import { getConversation } from '../helper/gerConversation';
-// for uplaods
+// for uplaods----------------
 import { promisify } from 'util';
 import upload from '../utilities/upload';
-
 const uploadSingle = promisify(upload.single('media'));
 const handleChat = async (
   io: IOServer,
