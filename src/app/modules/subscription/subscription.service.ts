@@ -7,7 +7,7 @@ import config from '../../config';
 import { subscriptionPrice } from '../../constant';
 const stripe = new Stripe(config.stripe.stripe_secret_key as string);
 
-// purchase subscription--------------------
+// purchase subscription--------------------------
 const purchaseSubscription = async (profileId: string) => {
   const normalUser = await NormalUser.findById(profileId);
   if (!normalUser) {
@@ -31,7 +31,7 @@ const purchaseSubscription = async (profileId: string) => {
   };
 };
 
-// renew subscription----------------
+// renew subscription----------------------
 
 const renewSubscription = async (profileId: string) => {
   const normalUser = await NormalUser.findById(profileId);
