@@ -22,4 +22,6 @@ router.patch(
   NormalUserController.updateUserProfile,
 );
 
+router.post('/add-vides', auth(USER_ROLE.user), NormalUserController.addVideos);
+
 export const normalUserRoutes = router;
