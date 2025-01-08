@@ -36,7 +36,7 @@ const handleChat = async (
       .populate('messages')
       .sort({ updatedAt: -1 });
 
-    socket.emit('message', getConversationMessage?.messages || []);
+    socket.emit('messages', getConversationMessage?.messages || []);
   });
 
   // new message -----------------------------------
@@ -61,29 +61,25 @@ const handleChat = async (
       msgByUserId: data?.msgByUserId,
     };
     const saveMessage = await Message.create(messageData);
-    const updateConversation = await Conversation.updateOne(
+    // update the conversation
+    await Conversation.updateOne(
       { _id: conversation?._id },
       {
         $push: { messages: saveMessage?._id },
       },
     );
-    console.log(updateConversation);
     // get the conversation
-    const getConversationMessage = await Conversation.findOne({
-      $or: [
-        { sender: data?.sender, receiver: data?.receiver },
-        { sender: data?.receiver, receiver: data?.sender },
-      ],
-    })
-      .populate('messages')
-      .sort({ updatedAt: -1 });
-    // console.log('conversation mesage', getConversationMessage);
-    // send to the frontend ---------------
-    io.to(data?.sender).emit('message', getConversationMessage?.messages || []);
-    io.to(data?.receiver).emit(
-      'message',
-      getConversationMessage?.messages || [],
-    );
+    // const getConversationMessage = await Conversation.findOne({
+    //   $or: [
+    //     { sender: data?.sender, receiver: data?.receiver },
+    //     { sender: data?.receiver, receiver: data?.sender },
+    //   ],
+    // })
+    //   .populate('messages')
+    //   .sort({ updatedAt: -1 });
+    // send to the frontend only new message data ---------------
+    io.to(data?.sender).emit('message', messageData);
+    io.to(data?.receiver).emit('message', messageData);
 
     //send conversation
     const conversationSender = await getConversation(data?.sender);
