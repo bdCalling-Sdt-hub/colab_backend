@@ -12,6 +12,7 @@ import registrationSuccessEmailBody from '../../mailTemplate/registerSucessEmail
 import cron from 'node-cron';
 import sendEmail from '../../utilities/sendEmail';
 import { JwtPayload } from 'jsonwebtoken';
+import unlinkFile from '../../helper/unlinkFile';
 const generateVerifyCode = (): number => {
   return Math.floor(10000 + Math.random() * 90000);
 };
@@ -132,6 +133,23 @@ const deleteUserAccount = async (user: JwtPayload, password: string) => {
   }
   if (!(await User.isPasswordMatched(password, userData?.password))) {
     throw new AppError(httpStatus.FORBIDDEN, 'Password do not match');
+  }
+
+  const normalUser = await NormalUser.findById(user?.profileId);
+  if (!normalUser) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  if (normalUser.videos?.length > 0) {
+    for (const videoPath of normalUser.videos) {
+      unlinkFile(videoPath);
+    }
+  }
+
+  if (normalUser.profile_image) {
+    if (normalUser.profile_image) {
+      unlinkFile(normalUser.profile_image);
+    }
   }
 
   await NormalUser.findByIdAndDelete(user.profileId);
