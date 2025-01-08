@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Server as IOServer, Socket } from 'socket.io';
 import { Server as HTTPServer } from 'http';
-import { User } from '../modules/user/user.model';
 import handleChat from './handleChat';
+import NormalUser from '../modules/normalUser/normalUser.model';
 let io: IOServer;
 
 const initializeSocket = (server: HTTPServer) => {
@@ -22,7 +22,7 @@ const initializeSocket = (server: HTTPServer) => {
         return;
       }
       // const currentUser = await getUserDetails(userId);
-      const currentUser = await User.findById(userId);
+      const currentUser = await NormalUser.findById(userId);
       if (!currentUser) {
         return;
       }
@@ -34,7 +34,7 @@ const initializeSocket = (server: HTTPServer) => {
       // send to the client
 
       // handle chat -------------------
-      await handleChat(io, socket, onlineUser);
+      await handleChat(io, socket, onlineUser, currentUserId);
       io.emit('onlineUser', Array.from(onlineUser));
       socket.on('disconnect', () => {
         console.log('A user disconnected:', socket.id);

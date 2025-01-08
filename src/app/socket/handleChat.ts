@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Server as IOServer, Socket } from 'socket.io';
 import NormalUser from '../modules/normalUser/normalUser.model';
+import Conversation from '../modules/conversation/conversation.model';
+import Message from '../modules/message/message.model';
+import { getConversation } from '../helper/gerConversation';
 
 const handleChat = async (
   io: IOServer,
   socket: Socket,
   onlineUser: any,
+  currentUserId: string,
 ): Promise<void> => {
   // message page
   socket.on('message-page', async (userId) => {
-    console.log('Received message-page for userId:', userId);
-
     const userDetails = await NormalUser.findById(userId).select('-password');
     if (userDetails) {
       const payload = {
@@ -34,9 +36,91 @@ const handleChat = async (
       .populate('messages')
       .sort({ updatedAt: -1 });
 
-    console.log('previous conversation message', getConversationMessage);
-
     socket.emit('message', getConversationMessage?.messages || []);
+  });
+
+  // new message -----------------------------------
+  socket.on('new-message', async (data) => {
+    let conversation = await Conversation.findOne({
+      $or: [
+        { sender: data?.sender, receiver: data?.receiver },
+        { sender: data?.receiver, receiver: data?.sender },
+      ],
+    });
+    // if conversation is not available then create a new conversation
+    if (!conversation) {
+      conversation = await Conversation.create({
+        sender: data?.sender,
+        receiver: data?.receiver,
+      });
+    }
+    const messageData = {
+      text: data.text,
+      imageUrl: data.imageUrl,
+      videoUrl: data.videoUrl,
+      msgByUserId: data?.msgByUserId,
+    };
+    const saveMessage = await Message.create(messageData);
+    const updateConversation = await Conversation.updateOne(
+      { _id: conversation?._id },
+      {
+        $push: { messages: saveMessage?._id },
+      },
+    );
+    console.log(updateConversation);
+    // get the conversation
+    const getConversationMessage = await Conversation.findOne({
+      $or: [
+        { sender: data?.sender, receiver: data?.receiver },
+        { sender: data?.receiver, receiver: data?.sender },
+      ],
+    })
+      .populate('messages')
+      .sort({ updatedAt: -1 });
+    // console.log('conversation mesage', getConversationMessage);
+    // send to the frontend ---------------
+    io.to(data?.sender).emit('message', getConversationMessage?.messages || []);
+    io.to(data?.receiver).emit(
+      'message',
+      getConversationMessage?.messages || [],
+    );
+
+    //send conversation
+    const conversationSender = await getConversation(data?.sender);
+    const conversationReceiver = await getConversation(data?.receiver);
+
+    io.to(data?.sender).emit('conversation', conversationSender);
+    io.to(data?.receiver).emit('conversation', conversationReceiver);
+  });
+
+  // sidebar
+  socket.on('sidebar', async (crntUserId) => {
+    const conversation = await getConversation(crntUserId);
+    socket.emit('conversation', conversation);
+  });
+
+  // send
+  socket.on('seen', async (msgByUserId) => {
+    const conversation = await Conversation.findOne({
+      $or: [
+        { sender: currentUserId, receiver: msgByUserId },
+        { sender: msgByUserId, receiver: currentUserId },
+      ],
+    });
+
+    const conversationMessageId = conversation?.messages || [];
+    // update the messages
+    await Message.updateMany(
+      { _id: { $in: conversationMessageId }, msgByUserId: msgByUserId },
+      { $set: { seen: true } },
+    );
+
+    //send conversation
+    const conversationSender = await getConversation(currentUserId as string);
+    const conversationReceiver = await getConversation(msgByUserId);
+
+    io.to(currentUserId as string).emit('conversation', conversationSender);
+    io.to(msgByUserId).emit('conversation', conversationReceiver);
   });
 };
 
