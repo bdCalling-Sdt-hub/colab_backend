@@ -22,9 +22,10 @@ const addVideos = catchAsync(async (req, res) => {
   if (files && typeof files === 'object' && 'video' in files) {
     req.body.videos = files['video'].map((file) => `${file.path}`);
   }
+
   const result = await NormalUserServices.addVideos(
     req.user.profileId,
-    req.body.viodes,
+    req.body.videos,
   );
   sendResponse(res, {
     statusCode: httpStatus.CREATED,

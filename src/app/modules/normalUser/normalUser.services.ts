@@ -38,6 +38,8 @@ const addVideos = async (userId: string, videos: string[]) => {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
 
+  console.log('videos', videos);
+
   const result = await NormalUser.findByIdAndUpdate(
     userId,
     {
