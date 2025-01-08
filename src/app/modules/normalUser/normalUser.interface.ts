@@ -12,6 +12,7 @@ export interface INormalUser {
   additionalSkills: [Types.ObjectId];
   videos: string[];
   subscriptionPurchaseDate?: Date;
+  subscriptionRenewDate?: Date;
   subscriptionExpiryDate?: Date;
   isPremium: false;
 }

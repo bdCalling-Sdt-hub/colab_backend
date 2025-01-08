@@ -41,6 +41,9 @@ const NormalUserSchema = new Schema<INormalUser>(
     subscriptionPurchaseDate: {
       type: Date,
     },
+    subscriptionRenewDate: {
+      type: Date,
+    },
     subscriptionExpiryDate: {
       type: Date,
     },
