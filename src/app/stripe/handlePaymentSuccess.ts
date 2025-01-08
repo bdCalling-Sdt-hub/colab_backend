@@ -40,6 +40,7 @@ const handleSubscriptionRenewSuccess = async (userId: string) => {
     userId,
     {
       subscriptionExpiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      subscriptionRenewDate: new Date(),
     },
     { new: true, runValidators: true },
   );
