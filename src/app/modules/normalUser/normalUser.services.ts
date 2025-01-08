@@ -1,13 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import httpStatus from 'http-status';
 import AppError from '../../error/appError';
 import { INormalUser } from './normalUser.interface';
 import NormalUser from './normalUser.model';
 import { JwtPayload } from 'jsonwebtoken';
 
-const updateUserProfile = async (
-  userData: JwtPayload,
-  payload: Partial<INormalUser>,
-) => {
+const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   const id = userData.profileId;
   if (payload.email) {
     throw new AppError(httpStatus.BAD_REQUEST, 'You can not change the email');
@@ -25,7 +25,20 @@ const updateUserProfile = async (
     );
   }
 
-  const result = await NormalUser.findByIdAndUpdate(id, payload, {
+  let videos = user.videos;
+  if (payload?.videosToRemove) {
+    videos = videos.filter((video) => !payload.videosToRemove.includes(video));
+  }
+
+  if (payload.videosToAdd) {
+    videos = [...videos, payload.videosToAdd];
+  }
+
+  payload.videos = videos;
+
+  const { videosToAdd, videosToRemove, ...other } = payload;
+
+  const result = await NormalUser.findByIdAndUpdate(id, other, {
     new: true,
     runValidators: true,
   });
@@ -37,8 +50,6 @@ const addVideos = async (userId: string, videos: string[]) => {
   if (!normalUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
-
-  console.log('videos', videos);
 
   const result = await NormalUser.findByIdAndUpdate(
     userId,

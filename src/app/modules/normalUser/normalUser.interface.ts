@@ -10,7 +10,7 @@ export interface INormalUser {
   profile_image: string;
   mainSkill: Types.ObjectId;
   additionalSkills: [Types.ObjectId];
-  videos: [string];
+  videos: string[];
   subscriptionPurchaseDate?: Date;
   subscriptionExpiryDate?: Date;
   isPremium: false;
