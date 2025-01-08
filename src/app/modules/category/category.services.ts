@@ -68,15 +68,12 @@ const deleteCategoryFromDB = async (categoryId: string) => {
   }
 };
 
-
-
 const categoryService = {
   createCategoryIntoDB,
   updateCategoryIntoDB,
   getAllCategories,
   getSingleCategory,
   deleteCategoryFromDB,
-
 };
 
 export default categoryService;
