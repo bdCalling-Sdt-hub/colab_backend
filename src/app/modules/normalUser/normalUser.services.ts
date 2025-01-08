@@ -6,6 +6,7 @@ import AppError from '../../error/appError';
 import { INormalUser } from './normalUser.interface';
 import NormalUser from './normalUser.model';
 import { JwtPayload } from 'jsonwebtoken';
+import unlinkFile from '../../helper/unlinkFile';
 
 const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   const id = userData.profileId;
@@ -25,6 +26,12 @@ const updateUserProfile = async (userData: JwtPayload, payload: any) => {
     );
   }
 
+  if (payload.profile_image) {
+    if (user.profile_image) {
+      unlinkFile(user.profile_image);
+    }
+  }
+
   let videos = user.videos;
   if (payload?.videosToRemove) {
     videos = videos.filter((video) => !payload.videosToRemove.includes(video));
@@ -35,6 +42,16 @@ const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   }
 
   payload.videos = videos;
+
+  // Handle removal of videos
+  if (payload.videosToRemove && Array.isArray(payload.videosToRemove)) {
+    for (const videoPath of payload.videosToRemove) {
+      unlinkFile(videoPath);
+
+      // Remove the video from the user's profile
+      // user.videos = user.videos.filter((video) => video !== videoPath);
+    }
+  }
 
   const { videosToAdd, videosToRemove, ...other } = payload;
 
