@@ -34,7 +34,7 @@ const initializeSocket = (server: HTTPServer) => {
       // send to the client
 
       // handle chat -------------------
-      await handleChat(io, socket);
+      await handleChat(io, socket, onlineUser);
       io.emit('onlineUser', Array.from(onlineUser));
       socket.on('disconnect', () => {
         console.log('A user disconnected:', socket.id);
