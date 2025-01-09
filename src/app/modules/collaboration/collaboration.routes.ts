@@ -21,7 +21,7 @@ router.get(
 );
 
 router.get(
-  '/get-all',
+  '/all-collaborations',
   auth(USER_ROLE.superAdmin),
   CollaborationController.getAllCollaborations,
 );

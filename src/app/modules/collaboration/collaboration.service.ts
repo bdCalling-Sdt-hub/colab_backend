@@ -1,9 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import httpStatus from 'http-status';
 import QueryBuilder from '../../builder/QueryBuilder';
+import AppError from '../../error/appError';
+import NormalUser from '../normalUser/normalUser.model';
 import Collaboration from './collaboration.model';
 
 // send collaboraton --------------
 const sendCollaborationRequest = async (profileId: string, payload: any) => {
+  const receiver = await NormalUser.findById(payload.receiver);
+  if (!receiver) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Receiver not found');
+  }
+
   const startDateTime = new Date(payload.startDate);
   const [startHours, startMinutes] = payload.startTime.split(':');
   startDateTime.setHours(Number(startHours), Number(startMinutes));
