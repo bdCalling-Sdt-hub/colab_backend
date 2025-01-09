@@ -14,15 +14,15 @@ const purchaseSubscription = async (profileId: string) => {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
   const amountInCent = subscriptionPrice * 100;
+  const userId = normalUser._id.toString();
   const paymentIntent = await stripe.paymentIntents.create({
     amount: amountInCent,
     currency: 'usd',
     payment_method_types: ['card'],
     metadata: {
       paymentPurpose: ENUM_PAYMENT_PURPOSE.PURCHASE_SUBSCRIPTION,
-      customerName: normalUser.name,
       email: normalUser.email,
-      userId: profileId,
+      userId,
     },
   });
 
