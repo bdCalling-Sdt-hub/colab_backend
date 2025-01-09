@@ -14,7 +14,9 @@ const sendCollaborationRequest = async (
 const getMyCollaborations = async (profileId: string) => {
   const result = await Collaboration.find({
     $or: [{ sender: profileId }, { receiver: profileId }],
-  });
+  })
+    .populate({ path: 'sender' })
+    .populate({ path: 'receiver' });
   return result;
 };
 
