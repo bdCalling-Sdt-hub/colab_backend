@@ -31,7 +31,6 @@ export const getConversation = async (crntUserId: string) => {
         lastMsg: conv?.messages[conv?.messages?.length - 1],
       };
     });
-    // console.log(conversation);
     // socket.emit('conversation', conversation);
     return conversation;
   } else {
