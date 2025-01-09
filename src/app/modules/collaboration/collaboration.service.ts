@@ -1,19 +1,21 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import QueryBuilder from '../../builder/QueryBuilder';
-import { ICollaboration } from './collaboration.interface';
 import Collaboration from './collaboration.model';
 
 // send collaboraton --------------
-const sendCollaborationRequest = async (
-  profileId: string,
-  payload: ICollaboration,
-) => {
+const sendCollaborationRequest = async (profileId: string, payload: any) => {
   const startDateTime = new Date(payload.startDate);
   const [startHours, startMinutes] = payload.startTime.split(':');
   startDateTime.setHours(Number(startHours), Number(startMinutes));
   const endDateTime = new Date(payload.endDate);
   const [endHours, endMinutes] = payload.endTime.split(':');
   endDateTime.setHours(Number(endHours), Number(endMinutes));
-  const result = await Collaboration.create({ ...payload, sender: profileId });
+  const result = await Collaboration.create({
+    ...payload,
+    sender: profileId,
+    startDateTime,
+    endDateTime,
+  });
   return result;
 };
 
