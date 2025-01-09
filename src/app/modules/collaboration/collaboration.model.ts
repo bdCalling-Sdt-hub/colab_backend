@@ -1,8 +1,8 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { ICollaboration } from './collaboration.interface';
 
 // Define the Mongoose schema
-const CollaborationSchema = new Schema<ICollaboration>(
+const collaboratonSchema = new Schema<ICollaboration>(
   {
     sender: {
       type: Schema.Types.ObjectId,
@@ -52,9 +52,9 @@ const CollaborationSchema = new Schema<ICollaboration>(
   },
 );
 
-const Collaboration = mongoose.model<ICollaboration & Document>(
+const Collaboration = mongoose.model<ICollaboration>(
   'Collaboration',
-  CollaborationSchema,
+  collaboratonSchema,
 );
 
 export default Collaboration;
