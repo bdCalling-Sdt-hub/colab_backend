@@ -64,7 +64,7 @@ const handleChat = async (
         { sender: data?.receiver, receiver: data?.sender },
       ],
     });
-    // if conversation is not available then create a new conversation
+    // if conversation is not available then create a new conversation----------
     if (!conversation) {
       conversation = await Conversation.create({
         sender: data?.sender,
