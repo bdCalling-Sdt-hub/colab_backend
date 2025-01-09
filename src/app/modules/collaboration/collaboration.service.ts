@@ -1,6 +1,7 @@
 import { ICollaboration } from './collaboration.interface';
 import Collaboration from './collaboration.model';
 
+// send collaboraton --------------
 const sendCollaborationRequest = async (
   profileId: string,
   payload: ICollaboration,
