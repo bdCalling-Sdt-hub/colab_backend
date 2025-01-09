@@ -11,7 +11,7 @@ const CollaborationSchema = new Schema<ICollaboration>(
     },
     receiver: {
       type: Schema.Types.ObjectId,
-      ref: 'User', // Reference the User model or adjust as needed
+      ref: 'NormalUser',
       required: true,
     },
     location: {
