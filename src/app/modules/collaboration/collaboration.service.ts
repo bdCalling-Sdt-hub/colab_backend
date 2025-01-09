@@ -7,6 +7,12 @@ const sendCollaborationRequest = async (
   profileId: string,
   payload: ICollaboration,
 ) => {
+  const startDateTime = new Date(payload.startDate);
+  const [startHours, startMinutes] = payload.startTime.split(':');
+  startDateTime.setHours(Number(startHours), Number(startMinutes));
+  const endDateTime = new Date(payload.endDate);
+  const [endHours, endMinutes] = payload.endTime.split(':');
+  endDateTime.setHours(Number(endHours), Number(endMinutes));
   const result = await Collaboration.create({ ...payload, sender: profileId });
   return result;
 };
