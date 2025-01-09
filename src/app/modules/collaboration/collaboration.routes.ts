@@ -14,4 +14,10 @@ router.post(
   CollaborationController.sendCollaborationRequest,
 );
 
+router.get(
+  '/my-collaborations',
+  auth(USER_ROLE.user),
+  CollaborationController.getMyCollaborations,
+);
+
 export const collaborationRoutes = router;
