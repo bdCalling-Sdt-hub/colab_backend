@@ -18,22 +18,15 @@ const collaboratonSchema = new Schema<ICollaboration>(
       type: String,
       required: true,
     },
-    startDate: {
+    startDateTime: {
       type: Date,
       required: true,
     },
-    startTime: {
-      type: String,
-      required: true,
-    },
-    endDate: {
+    endDateTime: {
       type: Date,
       required: true,
     },
-    endTime: {
-      type: String,
-      required: true,
-    },
+
     price: {
       type: Number,
       required: true,
