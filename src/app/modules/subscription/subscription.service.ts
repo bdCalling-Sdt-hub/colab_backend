@@ -38,6 +38,7 @@ const renewSubscription = async (profileId: string) => {
   if (!normalUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
+  const userId = normalUser._id.toString();
   const amountInCent = subscriptionPrice * 100;
   const paymentIntent = await stripe.paymentIntents.create({
     amount: amountInCent,
@@ -47,7 +48,7 @@ const renewSubscription = async (profileId: string) => {
       paymentPurpose: ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION,
       customerName: normalUser.name,
       email: normalUser.email,
-      userId: profileId,
+      userId,
     },
   });
 

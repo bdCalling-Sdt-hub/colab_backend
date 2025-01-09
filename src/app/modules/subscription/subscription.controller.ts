@@ -16,7 +16,7 @@ const purchaseSubscription = catchAsync(async (req, res) => {
 });
 
 const renewSubscription = catchAsync(async (req, res) => {
-  const result = await SubscriptionService.purchaseSubscription(
+  const result = await SubscriptionService.renewSubscription(
     req.user.profileId,
   );
   sendResponse(res, {

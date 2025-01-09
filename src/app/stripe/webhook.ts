@@ -22,6 +22,7 @@ const handleWebhook = async (req: Request, res: Response) => {
     switch (event.type) {
       case 'payment_intent.succeeded': {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        console.log(paymentIntent.metadata);
         const { userId, paymentPurpose } = paymentIntent.metadata;
 
         console.log(
