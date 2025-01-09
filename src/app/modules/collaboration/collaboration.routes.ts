@@ -20,4 +20,9 @@ router.get(
   CollaborationController.getMyCollaborations,
 );
 
+router.get(
+  '/get-all',
+  auth(USER_ROLE.superAdmin),
+  CollaborationController.getAllCollaborations,
+);
 export const collaborationRoutes = router;
