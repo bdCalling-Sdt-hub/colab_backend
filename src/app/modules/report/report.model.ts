@@ -23,6 +23,6 @@ const ReportSchema = new Schema<IReport>(
   { timestamps: true },
 );
 
-const ReportModel = model<IReport>('Report', ReportSchema);
+const Report = model<IReport>('Report', ReportSchema);
 
-export default ReportModel;
+export default Report;
