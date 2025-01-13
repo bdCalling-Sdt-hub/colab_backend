@@ -13,6 +13,10 @@ const NormalUserSchema = new Schema<INormalUser>(
       type: String,
       required: true,
     },
+    bio: {
+      type: String,
+      required: true,
+    },
     email: {
       type: String,
       required: true,
