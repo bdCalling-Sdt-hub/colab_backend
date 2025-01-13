@@ -12,9 +12,19 @@ const createReport = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAllReports = catchAsync(async (req, res) => {
+  const result = await ReportService.getAllReports(req.query);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Reports retrieved successfully',
+    data: result,
+  });
+});
 
 const ReportController = {
   createReport,
+  getAllReports,
 };
 
 export default ReportController;
