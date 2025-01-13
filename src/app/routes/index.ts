@@ -8,6 +8,7 @@ import { categoryRoutes } from '../modules/category/category.routes';
 import { subscriptionRoutes } from '../modules/subscription/subscription.routes';
 import { collaborationRoutes } from '../modules/collaboration/collaboration.routes';
 import { reportRoutes } from '../modules/report/report.routes';
+import { bookmarkRoutes } from '../modules/bookmark/bookmark.routes';
 
 const router = Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes = [
   {
     path: '/report',
     router: reportRoutes,
+  },
+  {
+    path: '/bookmark',
+    router: bookmarkRoutes,
   },
 ];
 

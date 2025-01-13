@@ -5,14 +5,14 @@ import productBookmarkController from './product.bookmark.controller';
 
 const router = express.Router();
 router.post(
-  '/add-delete-saved-profile/:id',
+  '/add-delete-bookmark/:id',
   auth(USER_ROLE.user),
   productBookmarkController.productBookmarkAddDelete,
 );
 router.get(
-  '/my-bookmark-products',
+  '/my-bookmarks',
   auth(USER_ROLE.user),
   productBookmarkController.getMyBookmark,
 );
 
-export const productBookmarkRoutes = router;
+export const bookmarkRoutes = router;
