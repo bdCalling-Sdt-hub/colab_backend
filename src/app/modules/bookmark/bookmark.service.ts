@@ -3,7 +3,7 @@ import AppError from '../../error/appError';
 import ProductBookmark from './product.bookmark.model';
 import NormalUser from '../normalUser/normalUser.model';
 
-const productBookmarkAddDelete = async (
+const profileBookmarkAddDelete = async (
   profileId: string,
   bookmarkProfileId: string,
 ) => {
@@ -37,27 +37,9 @@ const getMyBookmarkFromDB = async (profileId: string) => {
   return result;
 };
 
-// delete bookmark
-const deleteBookmarkFromDB = async (id: string, profileId: string) => {
-  const bookmark = await ProductBookmark.findOne({
-    _id: id,
-    user: profileId,
-  });
-
-  if (!bookmark) {
-    throw new AppError(httpStatus.NOT_FOUND, 'This bookmark does not exists');
-  }
-  const result = await ProductBookmark.findOneAndDelete({
-    _id: id,
-    user: profileId,
-  });
-  return result;
-};
-const productBookmarkServices = {
-  // createBookmarkIntoDB,
-  productBookmarkAddDelete,
+const BookmarkService = {
+  profileBookmarkAddDelete,
   getMyBookmarkFromDB,
-  deleteBookmarkFromDB,
 };
 
-export default productBookmarkServices;
+export default BookmarkService;
