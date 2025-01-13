@@ -5,7 +5,7 @@ import productBookmarkController from './product.bookmark.controller';
 
 const router = express.Router();
 router.post(
-  '/add-delete-product-bookmark/:id',
+  '/add-delete-saved-profile/:id',
   auth(USER_ROLE.user),
   productBookmarkController.productBookmarkAddDelete,
 );
