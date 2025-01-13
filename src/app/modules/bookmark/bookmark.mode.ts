@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { IBookmark } from './product.bookmark.interface';
+import { IBookmark } from './bookmark.interface';
 
 const bookmarkSchema = new Schema<IBookmark>(
   {

@@ -3,7 +3,7 @@ import catchAsync from '../../utilities/catchasync';
 import sendResponse from '../../utilities/sendResponse';
 import BookmarkService from './bookmark.service';
 
-const productBookmarkAddDelete = catchAsync(async (req, res) => {
+const bookmarkAddDelete = catchAsync(async (req, res) => {
   const result = await BookmarkService.profileBookmarkAddDelete(
     req.user.profileId,
     req.params.id,
@@ -31,9 +31,9 @@ const getMyBookmark = catchAsync(async (req, res) => {
   });
 });
 
-const productBookmarkController = {
-  productBookmarkAddDelete,
+const BookmarkController = {
+  bookmarkAddDelete,
   getMyBookmark,
 };
 
-export default productBookmarkController;
+export default BookmarkController;
