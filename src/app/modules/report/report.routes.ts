@@ -8,7 +8,7 @@ import ReportController from './report.controller';
 const router = express.Router();
 
 router.post(
-  '/cretae-report',
+  '/create-report',
   auth(USER_ROLE.user),
   validateRequest(ReportValidations.reportValidationSchema),
   ReportController.createReport,

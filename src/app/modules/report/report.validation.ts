@@ -3,7 +3,7 @@ import { ENUM_INCIDENT_TYPE } from '../../utilities/enum';
 
 const reportValidationSchema = z.object({
   body: z.object({
-    reportFrom: z.string({ required_error: 'Reported persion is requried' }),
+    reportTo: z.string({ required_error: 'Reported persion is requried' }),
     incidentType: z.enum(
       Object.values(ENUM_INCIDENT_TYPE) as [string, ...string[]],
     ),
