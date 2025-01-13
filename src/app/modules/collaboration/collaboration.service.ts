@@ -42,6 +42,7 @@ const getMyCollaborations = async (profileId: string) => {
       select: 'name profile_image',
       populate: { path: 'mainSkill', select: 'name' },
     });
+
   return result;
 };
 
@@ -49,8 +50,16 @@ const getMyCollaborations = async (profileId: string) => {
 const getAllCollaborations = async (query: Record<string, unknown>) => {
   const collaborationQuery = new QueryBuilder(
     Collaboration.find()
-      .populate({ path: 'sender' })
-      .populate({ path: 'receiver' }),
+      .populate({
+        path: 'sender',
+        select: 'name profile_image',
+        populate: { path: 'mainSkill', select: 'name' },
+      })
+      .populate({
+        path: 'receiver',
+        select: 'name profile_image',
+        populate: { path: 'mainSkill', select: 'name' },
+      }),
     query,
   )
     .search(['title'])
@@ -59,8 +68,8 @@ const getAllCollaborations = async (query: Record<string, unknown>) => {
     .paginate()
     .sort();
 
-  const result = collaborationQuery.modelQuery;
-  const meta = collaborationQuery.countTotal();
+  const result = await collaborationQuery.modelQuery;
+  const meta = await collaborationQuery.countTotal();
 
   return {
     result,
