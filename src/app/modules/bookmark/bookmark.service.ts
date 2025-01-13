@@ -1,38 +1,31 @@
 import httpStatus from 'http-status';
 import AppError from '../../error/appError';
 import ProductBookmark from './product.bookmark.model';
-
-// const createBookmarkIntoDB = async (productId: string, customerId: string) => {
-//   const result = await ProductBookmark.create({
-//     product: productId,
-//     costumer: customerId,
-//   });
-//   return result;
-// };
+import NormalUser from '../normalUser/normalUser.model';
 
 const productBookmarkAddDelete = async (
   profileId: string,
-  productId: string,
+  bookmarkProfileId: string,
 ) => {
   // check if article exists
-  const product = await Product.findById(productId);
-  if (!product) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Product not found');
+  const profile = await NormalUser.findById(bookmarkProfileId);
+  if (!profile) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Profile not found');
   }
   const bookmark = await ProductBookmark.findOne({
-    costumer: profileId,
-    product: productId,
+    user: profileId,
+    profile: bookmarkProfileId,
   });
   if (bookmark) {
     await ProductBookmark.findOneAndDelete({
-      costumer: profileId,
-      product: productId,
+      user: profileId,
+      profile: bookmarkProfileId,
     });
     return null;
   } else {
     const result = await ProductBookmark.create({
-      costumer: profileId,
-      product: productId,
+      user: profileId,
+      profile: bookmarkProfileId,
     });
     return result;
   }
