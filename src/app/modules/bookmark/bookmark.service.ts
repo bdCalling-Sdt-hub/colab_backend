@@ -32,16 +32,16 @@ const productBookmarkAddDelete = async (
 };
 
 // get bookmark from db
-const getMyBookmarkFromDB = async (costumerId: string) => {
-  const result = await ProductBookmark.find({ costumer: costumerId });
+const getMyBookmarkFromDB = async (profileId: string) => {
+  const result = await ProductBookmark.find({ user: profileId });
   return result;
 };
 
 // delete bookmark
-const deleteBookmarkFromDB = async (id: string, costumerId: string) => {
+const deleteBookmarkFromDB = async (id: string, profileId: string) => {
   const bookmark = await ProductBookmark.findOne({
     _id: id,
-    costumer: costumerId,
+    user: profileId,
   });
 
   if (!bookmark) {
@@ -49,7 +49,7 @@ const deleteBookmarkFromDB = async (id: string, costumerId: string) => {
   }
   const result = await ProductBookmark.findOneAndDelete({
     _id: id,
-    costumer: costumerId,
+    user: profileId,
   });
   return result;
 };
