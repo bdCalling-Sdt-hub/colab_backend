@@ -15,4 +15,5 @@ export interface INormalUser {
   subscriptionRenewDate?: Date;
   subscriptionExpiryDate?: Date;
   isPremium: false;
+  todayTotalScroll: number;
 }

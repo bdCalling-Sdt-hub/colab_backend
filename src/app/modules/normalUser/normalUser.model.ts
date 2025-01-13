@@ -59,6 +59,10 @@ const NormalUserSchema = new Schema<INormalUser>(
     videos: {
       type: [String],
     },
+    todayTotalScroll: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
