@@ -13,8 +13,13 @@ const getAllReports = async (query: Record<string, unknown>) => {
       .populate({
         path: 'reportFrom',
         select: 'profile_image name',
+        populate: { path: 'mainSkill', select: 'name' },
       })
-      .populate({ path: 'reportTo', select: 'profile_image name' }),
+      .populate({
+        path: 'reportTo',
+        select: 'profile_image name',
+        populate: { path: 'mainSkill', select: 'name' },
+      }),
     query,
   )
     .search(['incidentType'])
@@ -27,8 +32,8 @@ const getAllReports = async (query: Record<string, unknown>) => {
   const meta = await reportQuery.countTotal();
 
   return {
-    result,
     meta,
+    result,
   };
 };
 

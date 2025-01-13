@@ -27,6 +27,7 @@ const NormalUserSchema = new Schema<INormalUser>(
     },
     mainSkill: {
       type: Schema.Types.ObjectId,
+      ref: 'Category',
       // required: true,
     },
     additionalSkills: {
