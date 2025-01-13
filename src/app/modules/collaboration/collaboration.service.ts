@@ -32,8 +32,16 @@ const getMyCollaborations = async (profileId: string) => {
   const result = await Collaboration.find({
     $or: [{ sender: profileId }, { receiver: profileId }],
   })
-    .populate({ path: 'sender' })
-    .populate({ path: 'receiver' });
+    .populate({
+      path: 'sender',
+      select: 'name profile_image',
+      populate: { path: 'mainSkill', select: 'name' },
+    })
+    .populate({
+      path: 'receiver',
+      select: 'name profile_image',
+      populate: { path: 'mainSkill', select: 'name' },
+    });
   return result;
 };
 

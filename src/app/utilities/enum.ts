@@ -30,3 +30,9 @@ export const ENUM_INCIDENT_TYPE = {
   SPAM: 'Spam',
   OTHER: 'Other',
 };
+
+export const ENUM_COLLABORATION_STATUS = {
+  PENDING: 'pending',
+  UPCOMING: 'upcoming',
+  COMPLETED: 'completed',
+};

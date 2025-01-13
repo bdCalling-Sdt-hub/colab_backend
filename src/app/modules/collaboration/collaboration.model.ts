@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import { ICollaboration } from './collaboration.interface';
+import { ENUM_COLLABORATION_STATUS } from '../../utilities/enum';
 
 // Define the Mongoose schema
 const collaboratonSchema = new Schema<ICollaboration>(
@@ -38,6 +39,11 @@ const collaboratonSchema = new Schema<ICollaboration>(
     additionalNote: {
       type: String,
       required: false,
+    },
+    status: {
+      type: String,
+      enum: Object.values(ENUM_COLLABORATION_STATUS),
+      default: ENUM_COLLABORATION_STATUS.PENDING,
     },
   },
   {
