@@ -2,7 +2,6 @@ import Stripe from 'stripe';
 import config from '../../config';
 import { JwtPayload } from 'jsonwebtoken';
 import NormalUser from '../normalUser/normalUser.model';
-import { USER_ROLE } from '../user/user.constant';
 import AppError from '../../error/appError';
 import httpStatus from 'http-status';
 
