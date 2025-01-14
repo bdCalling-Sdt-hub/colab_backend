@@ -47,7 +47,7 @@ router.get(
   NormalUserController.getAllUser,
 );
 router.get(
-  '/get-single-user/:id',
+  '/single-user/:id',
   auth(USER_ROLE.superAdmin, USER_ROLE.user),
   NormalUserController.getSingleUser,
 );

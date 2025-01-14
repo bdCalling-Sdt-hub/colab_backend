@@ -112,7 +112,9 @@ const getAllUser = async (query: Record<string, unknown>) => {
 
 // get single user
 const getSingleUser = async (id: string) => {
-  const result = await NormalUser.findById(id);
+  const result = await NormalUser.findById(id)
+    .populate({ path: 'mainSkill', select: 'name' })
+    .populate({ path: 'additionalSkills', select: 'name' });
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
