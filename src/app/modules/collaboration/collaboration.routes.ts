@@ -32,4 +32,10 @@ router.patch(
   CollaborationController.updateCollaboration,
 );
 
+router.delete(
+  '/delete-collaboration/:id',
+  auth(USER_ROLE.user),
+  CollaborationController.deleteCollaboration,
+);
+
 export const collaborationRoutes = router;
