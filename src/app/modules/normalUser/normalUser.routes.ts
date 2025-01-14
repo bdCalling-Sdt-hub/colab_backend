@@ -35,4 +35,10 @@ router.post(
   NormalUserController.addVideos,
 );
 
+router.patch(
+  '/increase-total-scroll',
+  auth(USER_ROLE.user),
+  NormalUserController.increseTotalScroll,
+);
+
 export const normalUserRoutes = router;
