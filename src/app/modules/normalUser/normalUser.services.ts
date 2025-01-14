@@ -87,7 +87,7 @@ const increseTotalScroll = async (profileId: string) => {
   return result;
 };
 
-// crone jobs
+// crone jobs----------------------
 cron.schedule('59 23 * * *', async () => {
   const result = await NormalUser.updateMany(
     { isPremium: false },
