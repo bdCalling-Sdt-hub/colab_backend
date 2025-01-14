@@ -187,6 +187,62 @@ const acceptCollaboration = async (
   return { client_secret: paymentIntent.client_secret };
 };
 
+// mark as complete
+const markAsComplete = async (profileId: string, collaborationId: string) => {
+  const collaboration = await Collaboration.findOne({
+    _id: collaborationId,
+    receiver: profileId,
+  });
+  if (!collaboration) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
+  }
+
+  const moneyReceiver = await NormalUser.findById(collaboration.sender);
+  if (
+    !moneyReceiver ||
+    !moneyReceiver?.isStripeConnected ||
+    !moneyReceiver?.stripeAccountId
+  ) {
+    throw new AppError(
+      httpStatus.PARTIAL_CONTENT,
+      'Payment receiver not found , contact with collaborator',
+    );
+  }
+
+  const amountInCent = collaboration.price * 100;
+  try {
+    // Transfer funds
+    const transfer: any = await stripe.transfers.create({
+      amount: amountInCent,
+      currency: 'usd',
+      destination: moneyReceiver.stripeAccountId as string,
+    });
+    console.log('transfer', transfer);
+
+    // Payout to bank
+    const payout = await stripe.payouts.create(
+      {
+        amount: amountInCent,
+        currency: 'usd',
+      },
+      {
+        stripeAccount: moneyReceiver.stripeAccountId as string,
+      },
+    );
+    console.log('payout', payout);
+
+    // Update player data in database
+    await Collaboration.findByIdAndUpdate(
+      collaborationId,
+      { status: ENUM_COLLABORATION_STATUS.COMPLETED },
+      { new: true, runValidators: true },
+    );
+  } catch (error) {
+    console.error('Error during transfer or payout:', error);
+    throw error;
+  }
+};
+
 const CollaborationService = {
   sendCollaborationRequest,
   getMyCollaborations,
@@ -194,6 +250,7 @@ const CollaborationService = {
   updateCollaboration,
   deleteCollaboration,
   acceptCollaboration,
+  markAsComplete,
 };
 
 export default CollaborationService;
