@@ -56,9 +56,11 @@ const createConnectedAccountAndOnboardingLink = async (
   return onboardingLink.url;
 };
 
-const updateOnboardingLink = async (stripAccountId: string) => {
+const updateOnboardingLink = async (profileId: string) => {
+  const normalUser = await NormalUser.findById(profileId);
+  const stripAccountId = normalUser?.stripeAccountId;
   const accountLink = await stripe.accountLinks.create({
-    account: stripAccountId,
+    account: stripAccountId as string,
     refresh_url: `${config.stripe.onboarding_refresh_url}?accountId=${stripAccountId}`,
     return_url: config.stripe.onboarding_return_url,
     type: 'account_onboarding',

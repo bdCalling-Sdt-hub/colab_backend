@@ -9,6 +9,7 @@ import { subscriptionRoutes } from '../modules/subscription/subscription.routes'
 import { collaborationRoutes } from '../modules/collaboration/collaboration.routes';
 import { reportRoutes } from '../modules/report/report.routes';
 import { bookmarkRoutes } from '../modules/bookmark/bookmark.routes';
+import { stripeRoutes } from '../modules/stripe/stripe.routes';
 
 const router = Router();
 
@@ -52,6 +53,10 @@ const moduleRoutes = [
   {
     path: '/bookmark',
     router: bookmarkRoutes,
+  },
+  {
+    path: '/stripe',
+    router: stripeRoutes,
   },
 ];
 
