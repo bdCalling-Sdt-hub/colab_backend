@@ -42,10 +42,22 @@ const addVideos = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const increseTotalScroll = catchAsync(async (req, res) => {
+  const result = await NormalUserServices.increseTotalScroll(
+    req.user.profileId,
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'Today total view increased successfully',
+    data: result,
+  });
+});
 
 const NormalUserController = {
   updateUserProfile,
   addVideos,
+  increseTotalScroll,
 };
 
 export default NormalUserController;
