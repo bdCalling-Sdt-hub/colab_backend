@@ -48,12 +48,25 @@ const updateCollaboration = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const deleteCollaboration = catchAsync(async (req, res) => {
+  const result = await CollaborationService.deleteCollaboration(
+    req.user.profileId,
+    req.params.id,
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Collaboration deleted successfully',
+    data: result,
+  });
+});
 
 const CollaborationController = {
   sendCollaborationRequest,
   getMyCollaborations,
   getAllCollaborations,
   updateCollaboration,
+  deleteCollaboration,
 };
 
 export default CollaborationController;

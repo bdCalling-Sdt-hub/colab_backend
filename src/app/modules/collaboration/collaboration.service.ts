@@ -129,6 +129,15 @@ const deleteCollaboration = async (
   if (!collaboration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
   }
+  if (
+    collaboration.status == ENUM_COLLABORATION_STATUS.UPCOMING ||
+    collaboration.status == ENUM_COLLABORATION_STATUS.COMPLETED
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `You can't delete ${collaboration.status}`,
+    );
+  }
 
   const result = await Collaboration.findOneAndDelete({
     _id: collaborationId,
