@@ -53,11 +53,21 @@ const increseTotalScroll = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAllUser = catchAsync(async (req, res) => {
+  const result = await NormalUserServices.getAllUser(req.query);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'User retrieved successfully',
+    data: result,
+  });
+});
 
 const NormalUserController = {
   updateUserProfile,
   addVideos,
   increseTotalScroll,
+  getAllUser,
 };
 
 export default NormalUserController;

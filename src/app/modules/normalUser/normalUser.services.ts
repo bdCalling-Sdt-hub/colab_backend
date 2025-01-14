@@ -90,7 +90,12 @@ const increseTotalScroll = async (profileId: string) => {
 
 // get all normal user
 const getAllUser = async (query: Record<string, unknown>) => {
-  const userQuery = new QueryBuilder(NormalUser.find(), query)
+  const userQuery = new QueryBuilder(
+    NormalUser.find()
+      .populate({ path: 'mainSkill', select: 'name' })
+      .populate({ path: 'additionalSkills', select: 'name' }),
+    query,
+  )
     .search(['name'])
     .fields()
     .filter()

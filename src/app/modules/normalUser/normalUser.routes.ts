@@ -41,4 +41,10 @@ router.patch(
   NormalUserController.increseTotalScroll,
 );
 
+router.get(
+  '/all-users',
+  auth(USER_ROLE.user, USER_ROLE.superAdmin),
+  NormalUserController.getAllUser,
+);
+
 export const normalUserRoutes = router;

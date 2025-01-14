@@ -36,6 +36,7 @@ const NormalUserSchema = new Schema<INormalUser>(
     },
     additionalSkills: {
       type: [Schema.Types.ObjectId],
+      ref: 'Category',
       validate: {
         validator: function (array: any) {
           return array.length <= 3;
