@@ -4,8 +4,13 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../error/appError';
 import NormalUser from '../normalUser/normalUser.model';
 import Collaboration from './collaboration.model';
-import { ENUM_COLLABORATION_STATUS } from '../../utilities/enum';
-
+import {
+  ENUM_COLLABORATION_STATUS,
+  ENUM_PAYMENT_PURPOSE,
+} from '../../utilities/enum';
+import Stripe from 'stripe';
+import config from '../../config';
+const stripe = new Stripe(config.stripe.stripe_secret_key as string);
 // send collaboraton --------------
 const sendCollaborationRequest = async (profileId: string, payload: any) => {
   const receiver = await NormalUser.findById(payload.receiver);
@@ -157,12 +162,39 @@ const deleteCollaboration = async (
   });
   return result;
 };
+
+const acceptCollaboration = async (
+  profileId: string,
+  collaborationId: string,
+) => {
+  const collaboration = await Collaboration.findOne({
+    _id: collaborationId,
+    receiver: profileId,
+  });
+  if (!collaboration) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
+  }
+  const amountInCents = collaboration.price * 100;
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: amountInCents,
+    currency: 'usd',
+    payment_method_types: ['card'],
+    metadata: {
+      collaborationId,
+      purpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
+    },
+  });
+
+  return { client_secret: paymentIntent.client_secret };
+};
+
 const CollaborationService = {
   sendCollaborationRequest,
   getMyCollaborations,
   getAllCollaborations,
   updateCollaboration,
   deleteCollaboration,
+  acceptCollaboration,
 };
 
 export default CollaborationService;
