@@ -8,6 +8,7 @@ import NormalUser from './normalUser.model';
 import { JwtPayload } from 'jsonwebtoken';
 import unlinkFile from '../../helper/unlinkFile';
 import cron from 'node-cron';
+import QueryBuilder from '../../builder/QueryBuilder';
 const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   const id = userData.profileId;
   if (payload.email) {
@@ -87,6 +88,24 @@ const increseTotalScroll = async (profileId: string) => {
   return result;
 };
 
+// get all normal user
+const getAllUser = async (query: Record<string, unknown>) => {
+  const userQuery = new QueryBuilder(NormalUser.find(), query)
+    .search(['name'])
+    .fields()
+    .filter()
+    .paginate()
+    .sort();
+
+  const result = await userQuery.modelQuery;
+  const meta = await userQuery.countTotal();
+
+  return {
+    meta,
+    result,
+  };
+};
+
 // crone jobs----------------------
 cron.schedule('59 23 * * *', async () => {
   const result = await NormalUser.updateMany(
@@ -101,6 +120,7 @@ const NormalUserServices = {
   updateUserProfile,
   addVideos,
   increseTotalScroll,
+  getAllUser,
 };
 
 export default NormalUserServices;
