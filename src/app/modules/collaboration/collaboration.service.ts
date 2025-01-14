@@ -184,7 +184,6 @@ const acceptCollaboration = async (
       purpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
     },
   });
-
   return { client_secret: paymentIntent.client_secret };
 };
 
