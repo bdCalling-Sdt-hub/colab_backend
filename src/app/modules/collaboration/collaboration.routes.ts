@@ -29,6 +29,7 @@ router.get(
 router.patch(
   '/update-collaboration/:id',
   auth(USER_ROLE.user),
+  validateRequest(CollaborationValidations.updateCollaborationSchema),
   CollaborationController.updateCollaboration,
 );
 
