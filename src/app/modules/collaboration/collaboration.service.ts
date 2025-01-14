@@ -11,6 +11,12 @@ const sendCollaborationRequest = async (profileId: string, payload: any) => {
   if (!receiver) {
     throw new AppError(httpStatus.NOT_FOUND, 'Receiver not found');
   }
+  if (!receiver.stripeAccountId || !receiver.isStripeConnected) {
+    throw new AppError(
+      httpStatus.UNAVAILABLE_FOR_LEGAL_REASONS,
+      "This persion don't provide his/her payment info , please try leter",
+    );
+  }
 
   const startDateTime = new Date(payload.startDate);
   const [startHours, startMinutes] = payload.startTime.split(':');
