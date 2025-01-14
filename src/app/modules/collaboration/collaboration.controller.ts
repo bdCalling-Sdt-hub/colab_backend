@@ -60,6 +60,18 @@ const deleteCollaboration = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const acceptCollaboration = catchAsync(async (req, res) => {
+  const result = await CollaborationService.acceptCollaboration(
+    req.user.profileId,
+    req.params.id,
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Collaboration accepted successfully',
+    data: result,
+  });
+});
 
 const CollaborationController = {
   sendCollaborationRequest,
@@ -67,6 +79,7 @@ const CollaborationController = {
   getAllCollaborations,
   updateCollaboration,
   deleteCollaboration,
+  acceptCollaboration,
 };
 
 export default CollaborationController;

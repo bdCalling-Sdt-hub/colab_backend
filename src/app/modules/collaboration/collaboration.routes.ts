@@ -39,4 +39,10 @@ router.delete(
   CollaborationController.deleteCollaboration,
 );
 
+router.post(
+  '/access-collaboration/:id',
+  auth(USER_ROLE.user),
+  CollaborationController.acceptCollaboration,
+);
+
 export const collaborationRoutes = router;
