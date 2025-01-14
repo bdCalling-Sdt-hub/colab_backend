@@ -231,7 +231,7 @@ const markAsComplete = async (profileId: string, collaborationId: string) => {
     );
     console.log('payout', payout);
 
-    // Update player data in database
+    // Update collaboration data
     await Collaboration.findByIdAndUpdate(
       collaborationId,
       { status: ENUM_COLLABORATION_STATUS.COMPLETED },
