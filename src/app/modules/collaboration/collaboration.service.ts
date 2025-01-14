@@ -4,6 +4,8 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../error/appError';
 import NormalUser from '../normalUser/normalUser.model';
 import Collaboration from './collaboration.model';
+import { ICollaboration } from './collaboration.interface';
+import { ENUM_COLLABORATION_STATUS } from '../../utilities/enum';
 
 // send collaboraton --------------
 const sendCollaborationRequest = async (profileId: string, payload: any) => {
@@ -14,7 +16,7 @@ const sendCollaborationRequest = async (profileId: string, payload: any) => {
   if (!receiver.stripeAccountId || !receiver.isStripeConnected) {
     throw new AppError(
       httpStatus.UNAVAILABLE_FOR_LEGAL_REASONS,
-      "This persion don't provide his/her payment info , please try leter",
+      "This persion don't provide his/her payment info , please try again leter",
     );
   }
 
@@ -81,6 +83,38 @@ const getAllCollaborations = async (query: Record<string, unknown>) => {
     result,
     meta,
   };
+};
+
+// update collaboration
+const updateCollaboration = async (
+  profileId: string,
+  collaborationId: string,
+  payload: Partial<ICollaboration>,
+) => {
+  const collaboration = await Collaboration.findOne({
+    sender: profileId,
+    _id: collaborationId,
+  });
+  if (!collaboration) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
+  }
+
+  if (
+    collaboration.status == ENUM_COLLABORATION_STATUS.UPCOMING ||
+    collaboration.status == ENUM_COLLABORATION_STATUS.COMPLETED
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `This collaboration already ${collaboration.status}, you can't edit this now`,
+    );
+  }
+
+  const result = await Collaboration.findOneAndUpdate(
+    { sender: profileId, _id: collaborationId },
+    payload,
+    { new: true, runValidators: true },
+  );
+  return result;
 };
 
 const CollaborationService = {
