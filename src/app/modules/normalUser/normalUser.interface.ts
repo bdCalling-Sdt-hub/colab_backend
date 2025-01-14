@@ -16,4 +16,6 @@ export interface INormalUser {
   subscriptionExpiryDate?: Date;
   isPremium: false;
   todayTotalScroll: number;
+  stripeAccountId: string;
+  isStripeConnected: boolean;
 }

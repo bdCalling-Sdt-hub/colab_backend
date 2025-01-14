@@ -63,6 +63,13 @@ const NormalUserSchema = new Schema<INormalUser>(
       type: Number,
       default: 0,
     },
+    stripeAccountId: {
+      type: String,
+    },
+    isStripeConnected: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

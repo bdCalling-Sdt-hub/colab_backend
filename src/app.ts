@@ -11,7 +11,7 @@ import router from './app/routes';
 import notFound from './app/middlewares/notFound';
 const app: Application = express();
 import sendContactUsEmail from './app/helper/sendContactUsEmail';
-import handleWebhook from './app/stripe/webhook';
+import handleWebhook from './app/stripeManager/webhook';
 // web hook
 app.post(
   '/colab-app/webhook',
@@ -24,10 +24,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      'http://localhost:5173',
-      'http://localhost:3000',
-    ],
+    origin: ['http://localhost:5173', 'http://localhost:3000'],
     credentials: true,
   }),
 );
