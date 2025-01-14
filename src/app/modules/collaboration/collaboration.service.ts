@@ -4,7 +4,6 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../error/appError';
 import NormalUser from '../normalUser/normalUser.model';
 import Collaboration from './collaboration.model';
-import { ICollaboration } from './collaboration.interface';
 import { ENUM_COLLABORATION_STATUS } from '../../utilities/enum';
 
 // send collaboraton --------------
@@ -89,12 +88,24 @@ const getAllCollaborations = async (query: Record<string, unknown>) => {
 const updateCollaboration = async (
   profileId: string,
   collaborationId: string,
-  payload: Partial<ICollaboration>,
+  payload: any,
 ) => {
   const collaboration = await Collaboration.findOne({
     sender: profileId,
     _id: collaborationId,
   });
+
+  //
+  const startDateTime = new Date(payload.startDate);
+  const [startHours, startMinutes] = payload.startTime.split(':');
+  startDateTime.setHours(Number(startHours), Number(startMinutes));
+  const endDateTime = new Date(payload.endDate);
+  const [endHours, endMinutes] = payload.endTime.split(':');
+  endDateTime.setHours(Number(endHours), Number(endMinutes));
+
+  payload.startDateTime = startDateTime;
+  payload.endDateTime = endDateTime;
+
   if (!collaboration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
   }
