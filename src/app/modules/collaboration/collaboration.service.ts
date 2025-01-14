@@ -152,7 +152,7 @@ const deleteCollaboration = async (
   ) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      `You can't delete ${collaboration.status}`,
+      `You can't delete ${collaboration.status} collaboration`,
     );
   }
 
