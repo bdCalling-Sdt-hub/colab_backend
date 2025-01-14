@@ -117,11 +117,31 @@ const updateCollaboration = async (
   return result;
 };
 
+// delete collaboration
+const deleteCollaboration = async (
+  profileId: string,
+  collaborationId: string,
+) => {
+  const collaboration = await Collaboration.findOne({
+    sender: profileId,
+    _id: collaborationId,
+  });
+  if (!collaboration) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
+  }
+
+  const result = await Collaboration.findOneAndDelete({
+    _id: collaborationId,
+    sender: profileId,
+  });
+  return result;
+};
 const CollaborationService = {
   sendCollaborationRequest,
   getMyCollaborations,
   getAllCollaborations,
   updateCollaboration,
+  deleteCollaboration,
 };
 
 export default CollaborationService;
