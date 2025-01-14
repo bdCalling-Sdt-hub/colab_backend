@@ -62,12 +62,22 @@ const getAllUser = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getSingleUser = catchAsync(async (req, res) => {
+  const result = await NormalUserServices.getSingleUser(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'User retrieved successfully',
+    data: result,
+  });
+});
 
 const NormalUserController = {
   updateUserProfile,
   addVideos,
   increseTotalScroll,
   getAllUser,
+  getSingleUser,
 };
 
 export default NormalUserController;

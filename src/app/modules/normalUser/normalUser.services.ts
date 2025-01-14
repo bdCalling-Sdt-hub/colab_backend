@@ -104,11 +104,19 @@ const getAllUser = async (query: Record<string, unknown>) => {
 
   const result = await userQuery.modelQuery;
   const meta = await userQuery.countTotal();
-
   return {
     meta,
     result,
   };
+};
+
+// get single user
+const getSingleUser = async (id: string) => {
+  const result = await NormalUser.findById(id);
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  return result;
 };
 
 // crone jobs----------------------
@@ -126,6 +134,7 @@ const NormalUserServices = {
   addVideos,
   increseTotalScroll,
   getAllUser,
+  getSingleUser,
 };
 
 export default NormalUserServices;
