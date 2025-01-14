@@ -44,5 +44,10 @@ router.post(
   auth(USER_ROLE.user),
   CollaborationController.acceptCollaboration,
 );
+router.post(
+  '/mark-as-complete/:id',
+  auth(USER_ROLE.user),
+  CollaborationController.markAsComplete,
+);
 
 export const collaborationRoutes = router;

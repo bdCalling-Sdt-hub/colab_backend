@@ -72,6 +72,18 @@ const acceptCollaboration = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const markAsComplete = catchAsync(async (req, res) => {
+  const result = await CollaborationService.markAsComplete(
+    req.user.profileId,
+    req.params.id,
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Collaboration completed successfully',
+    data: result,
+  });
+});
 
 const CollaborationController = {
   sendCollaborationRequest,
@@ -80,6 +92,7 @@ const CollaborationController = {
   updateCollaboration,
   deleteCollaboration,
   acceptCollaboration,
+  markAsComplete,
 };
 
 export default CollaborationController;
