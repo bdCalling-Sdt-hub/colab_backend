@@ -78,9 +78,19 @@ const addVideos = async (userId: string, videos: string[]) => {
   return result;
 };
 
+const increseTotalScroll = async (profileId: string) => {
+  const result = await NormalUser.findByIdAndUpdate(
+    profileId,
+    { $inc: { todayTotalScroll: 1 } },
+    { new: true, runValidators: true },
+  );
+  return result;
+};
+
 const NormalUserServices = {
   updateUserProfile,
   addVideos,
+  increseTotalScroll,
 };
 
 export default NormalUserServices;
