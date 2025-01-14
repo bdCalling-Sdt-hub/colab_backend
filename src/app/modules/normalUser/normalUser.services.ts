@@ -7,7 +7,7 @@ import { INormalUser } from './normalUser.interface';
 import NormalUser from './normalUser.model';
 import { JwtPayload } from 'jsonwebtoken';
 import unlinkFile from '../../helper/unlinkFile';
-
+import cron from 'node-cron';
 const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   const id = userData.profileId;
   if (payload.email) {
@@ -86,6 +86,16 @@ const increseTotalScroll = async (profileId: string) => {
   );
   return result;
 };
+
+// crone jobs
+cron.schedule('59 23 * * *', async () => {
+  const result = await NormalUser.updateMany(
+    { isPremium: false },
+    { todayTotalScroll: 0 },
+  );
+
+  console.log('result for reset total scroll', result);
+});
 
 const NormalUserServices = {
   updateUserProfile,
