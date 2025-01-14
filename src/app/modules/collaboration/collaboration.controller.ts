@@ -35,11 +35,25 @@ const getAllCollaborations = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const updateCollaboration = catchAsync(async (req, res) => {
+  const result = await CollaborationService.updateCollaboration(
+    req.user.profileId,
+    req.params.id,
+    req.body,
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Collaboration updated successfully',
+    data: result,
+  });
+});
 
 const CollaborationController = {
   sendCollaborationRequest,
   getMyCollaborations,
   getAllCollaborations,
+  updateCollaboration,
 };
 
 export default CollaborationController;

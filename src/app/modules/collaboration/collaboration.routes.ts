@@ -25,4 +25,11 @@ router.get(
   auth(USER_ROLE.superAdmin),
   CollaborationController.getAllCollaborations,
 );
+
+router.patch(
+  '/update-collaboration/:id',
+  auth(USER_ROLE.user),
+  CollaborationController.updateCollaboration,
+);
+
 export const collaborationRoutes = router;

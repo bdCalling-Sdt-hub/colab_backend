@@ -121,6 +121,7 @@ const CollaborationService = {
   sendCollaborationRequest,
   getMyCollaborations,
   getAllCollaborations,
+  updateCollaboration,
 };
 
 export default CollaborationService;
