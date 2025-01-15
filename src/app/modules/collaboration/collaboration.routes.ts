@@ -40,7 +40,7 @@ router.delete(
 );
 
 router.post(
-  '/access-collaboration/:id',
+  '/accept-collaboration/:id',
   auth(USER_ROLE.user),
   CollaborationController.acceptCollaboration,
 );

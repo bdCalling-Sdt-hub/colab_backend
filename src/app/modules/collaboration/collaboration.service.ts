@@ -10,6 +10,7 @@ import {
 } from '../../utilities/enum';
 import Stripe from 'stripe';
 import config from '../../config';
+import { INormalUser } from '../normalUser/normalUser.interface';
 const stripe = new Stripe(config.stripe.stripe_secret_key as string);
 // send collaboraton --------------
 const sendCollaborationRequest = async (profileId: string, payload: any) => {
@@ -163,6 +164,30 @@ const deleteCollaboration = async (
   return result;
 };
 
+// const acceptCollaboration = async (
+//   profileId: string,
+//   collaborationId: string,
+// ) => {
+//   const collaboration = await Collaboration.findOne({
+//     _id: collaborationId,
+//     receiver: profileId,
+//   });
+//   if (!collaboration) {
+//     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
+//   }
+//   const amountInCents = collaboration.price * 100;
+//   const paymentIntent = await stripe.paymentIntents.create({
+//     amount: amountInCents,
+//     currency: 'usd',
+//     payment_method_types: ['card'],
+//     metadata: {
+//       collaborationId,
+//       purpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
+//     },
+//   });
+//   return { client_secret: paymentIntent.client_secret };
+// };
+
 const acceptCollaboration = async (
   profileId: string,
   collaborationId: string,
@@ -170,21 +195,38 @@ const acceptCollaboration = async (
   const collaboration = await Collaboration.findOne({
     _id: collaborationId,
     receiver: profileId,
-  });
+  }).populate({ path: 'sender', select: 'name' });
   if (!collaboration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
   }
+
   const amountInCents = collaboration.price * 100;
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amountInCents,
-    currency: 'usd',
+  const sender = collaboration.sender as INormalUser;
+  // Create a checkout session
+  const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
+    mode: 'payment',
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: `Collaboration with ${sender.name}`,
+          },
+          unit_amount: amountInCents,
+        },
+        quantity: 1,
+      },
+    ],
     metadata: {
       collaborationId,
-      purpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
+      paymentPurpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
     },
+    success_url: `https://yourdomain.com/success?collaborationId=${collaborationId}`,
+    cancel_url: `https://yourdomain.com/cancel`,
   });
-  return { client_secret: paymentIntent.client_secret };
+
+  return { url: session.url }; // Redirect the user to this URL
 };
 
 // mark as complete

@@ -20,15 +20,38 @@ const handleWebhook = async (req: Request, res: Response) => {
 
     // Handle different event types
     switch (event.type) {
-      case 'payment_intent.succeeded': {
-        const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        console.log(paymentIntent.metadata);
-        // const { userId, paymentPurpose } = paymentIntent.metadata;
+      // case 'payment_intent.succeeded': {
+      //   const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      //   console.log(paymentIntent.metadata);
+      //   // const { userId, paymentPurpose } = paymentIntent.metadata;
 
-        console.log(`Payment successful for user ${paymentIntent.metadata}}`);
-        await handlePaymentSuccess(paymentIntent.metadata);
-        // Update subscription status in your database
-        // E.g., Activate the subscription for the user
+      //   console.log(`Payment successful for user ${paymentIntent.metadata}}`);
+      //   await handlePaymentSuccess(paymentIntent.metadata);
+      //   // Update subscription status in your database
+      //   // E.g., Activate the subscription for the user
+
+      //   break;
+      // }
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session;
+
+        console.log(session.metadata);
+        // const { collaborationId, purpose } = session.metadata;
+        // Access the payment_intent ID (transaction ID)
+        const paymentIntentId = session.payment_intent;
+        console.log(`Payment Intent (Transaction) ID: ${paymentIntentId}`);
+
+        // Optionally, retrieve more details about the payment intent (e.g., amount, status)
+        const paymentIntent = await stripe.paymentIntents.retrieve(
+          paymentIntentId as string,
+        );
+        console.log(paymentIntent); // You can access details like payment status, transaction amount, etc.
+
+        console.log(`Checkout completed for session: ${session.id}`);
+        await handlePaymentSuccess(session.metadata, paymentIntent.id);
+
+        // Perform any post-payment actions, like updating your database
+        // Example: Activate the collaboration or update the status
 
         break;
       }

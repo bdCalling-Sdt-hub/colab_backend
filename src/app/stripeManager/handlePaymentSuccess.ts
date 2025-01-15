@@ -9,21 +9,28 @@ import {
 } from '../utilities/enum';
 import Collaboration from '../modules/collaboration/collaboration.model';
 
-const handlePaymentSuccess = async (metaData: any) => {
+const handlePaymentSuccess = async (metaData: any, transactionId: string) => {
   if (metaData.paymentPurpose == ENUM_PAYMENT_PURPOSE.PURCHASE_SUBSCRIPTION) {
-    await handleSubcriptionPurchaseSuccess(metaData.userId);
+    await handleSubcriptionPurchaseSuccess(metaData.userId, transactionId);
   } else if (
     metaData.paymentPurpose == ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION
   ) {
-    await handleSubscriptionRenewSuccess(metaData.userid);
+    await handleSubscriptionRenewSuccess(metaData.userid, transactionId);
   } else if (
     metaData.paymentPurpose == ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT
   ) {
-    await handleCollabratePaymentSuccess(metaData?.collaborationId);
+    await handleCollabratePaymentSuccess(
+      metaData?.collaborationId,
+      transactionId,
+    );
   }
 };
 
-const handleSubcriptionPurchaseSuccess = async (userId: string) => {
+const handleSubcriptionPurchaseSuccess = async (
+  userId: string,
+  transactionId: string,
+) => {
+  console.log(transactionId);
   const normalUser = await NormalUser.findById(userId);
   if (!normalUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
@@ -40,7 +47,11 @@ const handleSubcriptionPurchaseSuccess = async (userId: string) => {
   );
 };
 
-const handleSubscriptionRenewSuccess = async (userId: string) => {
+const handleSubscriptionRenewSuccess = async (
+  userId: string,
+  transactionId: string,
+) => {
+  console.log(transactionId);
   const normalUser = await NormalUser.findById(userId);
   if (!normalUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
@@ -55,7 +66,11 @@ const handleSubscriptionRenewSuccess = async (userId: string) => {
   );
 };
 
-const handleCollabratePaymentSuccess = async (collaborationId: string) => {
+const handleCollabratePaymentSuccess = async (
+  collaborationId: string,
+  transactionId: string,
+) => {
+  console.log(transactionId);
   const collaboration = await Collaboration.findById(collaborationId);
   if (!collaboration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
