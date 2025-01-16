@@ -87,7 +87,7 @@ const renewSubscription = async (profileId: string) => {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: `Purchase Subscription`,
+            name: `Renew Subscription`,
           },
           unit_amount: amountInCent,
         },

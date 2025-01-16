@@ -8,6 +8,10 @@ const TransactionSchema = new Schema(
       ref: 'NormalUser',
       required: true,
     },
+    email: {
+      type: String,
+      required: true,
+    },
     type: {
       type: String,
       enum: Object.values(ENUM_TRANSACTION_TYPE),
