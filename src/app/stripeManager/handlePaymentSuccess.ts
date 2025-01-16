@@ -25,13 +25,18 @@ const handlePaymentSuccess = async (
   } else if (
     metaData.paymentPurpose == ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION
   ) {
-    await handleSubscriptionRenewSuccess(metaData.userid, transactionId);
+    await handleSubscriptionRenewSuccess(
+      metaData.userid,
+      transactionId,
+      amount,
+    );
   } else if (
     metaData.paymentPurpose == ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT
   ) {
     await handleCollabratePaymentSuccess(
       metaData?.collaborationId,
       transactionId,
+      amount,
     );
   }
 };
@@ -59,7 +64,7 @@ const handleSubcriptionPurchaseSuccess = async (
   await Transaction.create({
     user: normalUser?._id,
     email: normalUser?.email,
-    type: ENUM_TRANSACTION_TYPE.SUBSCRIPTION_PURCHASE,
+    type: ENUM_TRANSACTION_TYPE.PURCHASE_SUBSCRIPTION,
     amount: amount,
   });
 };
@@ -67,6 +72,7 @@ const handleSubcriptionPurchaseSuccess = async (
 const handleSubscriptionRenewSuccess = async (
   userId: string,
   transactionId: string,
+  amount: number,
 ) => {
   console.log(transactionId);
   const normalUser = await NormalUser.findById(userId);
@@ -81,14 +87,24 @@ const handleSubscriptionRenewSuccess = async (
     },
     { new: true, runValidators: true },
   );
+  await Transaction.create({
+    user: normalUser?._id,
+    email: normalUser?.email,
+    type: ENUM_TRANSACTION_TYPE.RENEW_SUBSCRIPTION,
+    amount: amount,
+  });
 };
 
 const handleCollabratePaymentSuccess = async (
   collaborationId: string,
   transactionId: string,
+  amount: number,
 ) => {
   console.log(transactionId);
-  const collaboration = await Collaboration.findById(collaborationId);
+  const collaboration = await Collaboration.findById(collaborationId).populate({
+    path: 'receiver',
+    select: 'email',
+  });
   if (!collaboration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
   }
@@ -97,6 +113,12 @@ const handleCollabratePaymentSuccess = async (
     { status: ENUM_COLLABORATION_STATUS.UPCOMING },
     { new: true, runValidators: true },
   );
+  await Transaction.create({
+    user: collaboration?.receiver,
+    email: collaboration?.receiver?.email,
+    type: ENUM_TRANSACTION_TYPE.COLLABORATION,
+    amount: amount,
+  });
 };
 
 export default handlePaymentSuccess;
