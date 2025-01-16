@@ -10,6 +10,7 @@ import {
 } from '../utilities/enum';
 import Collaboration from '../modules/collaboration/collaboration.model';
 import Transaction from '../modules/transaction/transaction.model';
+import { INormalUser } from '../modules/normalUser/normalUser.interface';
 
 const handlePaymentSuccess = async (
   metaData: any,
@@ -100,7 +101,6 @@ const handleCollabratePaymentSuccess = async (
   transactionId: string,
   amount: number,
 ) => {
-  console.log(transactionId);
   const collaboration = await Collaboration.findById(collaborationId).populate({
     path: 'receiver',
     select: 'email',
@@ -113,9 +113,10 @@ const handleCollabratePaymentSuccess = async (
     { status: ENUM_COLLABORATION_STATUS.UPCOMING },
     { new: true, runValidators: true },
   );
+  const receiver = collaboration.receiver as INormalUser;
   await Transaction.create({
     user: collaboration?.receiver,
-    email: collaboration?.receiver?.email,
+    email: receiver?.email,
     type: ENUM_TRANSACTION_TYPE.COLLABORATION,
     amount: amount,
   });

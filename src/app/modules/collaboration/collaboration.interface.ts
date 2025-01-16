@@ -4,7 +4,7 @@ import { INormalUser } from '../normalUser/normalUser.interface';
 
 export interface ICollaboration {
   sender: Types.ObjectId | INormalUser;
-  receiver: Types.ObjectId;
+  receiver: Types.ObjectId | INormalUser;
   location: string;
   startDateTime: Date;
   endDateTime: Date;
