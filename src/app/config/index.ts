@@ -24,6 +24,8 @@ export default {
     webhook_endpoint_secret: process.env.WEBHOOK_ENDPOINT_SECRET,
     onboarding_return_url: process.env.ONBOARDING_RETURN_URL,
     onboarding_refresh_url: process.env.ONBOARDING_REFRESH_URL,
+    payment_success_url: process.env.PAYMENT_SUCCESS_URL,
+    payment_cancel_url: process.env.PAYMENT_CANCEL_URL,
   },
   twilio: {
     accountSid: process.env.TWILIO_ACCOUNT_SID,

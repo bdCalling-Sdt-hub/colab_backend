@@ -222,11 +222,11 @@ const acceptCollaboration = async (
       collaborationId,
       paymentPurpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
     },
-    success_url: `https://yourdomain.com/success?collaborationId=${collaborationId}`,
-    cancel_url: `https://yourdomain.com/cancel`,
+    success_url: `${config.stripe.payment_success_url}?collaborationId=${collaborationId}`,
+    cancel_url: `${config.stripe.payment_success_url}`,
   });
 
-  return { url: session.url }; // Redirect the user to this URL
+  return { url: session.url };
 };
 
 // mark as complete
