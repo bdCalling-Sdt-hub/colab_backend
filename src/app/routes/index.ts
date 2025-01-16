@@ -10,6 +10,7 @@ import { collaborationRoutes } from '../modules/collaboration/collaboration.rout
 import { reportRoutes } from '../modules/report/report.routes';
 import { bookmarkRoutes } from '../modules/bookmark/bookmark.routes';
 import { stripeRoutes } from '../modules/stripe/stripe.routes';
+import { transactionRoutes } from '../modules/transaction/transaction.routes';
 
 const router = Router();
 
@@ -57,6 +58,10 @@ const moduleRoutes = [
   {
     path: '/stripe',
     router: stripeRoutes,
+  },
+  {
+    path: '/transaction',
+    router: transactionRoutes,
   },
 ];
 
