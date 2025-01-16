@@ -2,8 +2,15 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import Transaction from './transaction.model';
 
 const getAllTransaction = async (query: Record<string, unknown>) => {
-  const transactionQuery = new QueryBuilder(Transaction.find(), query)
-    .search(['incidentType'])
+  const transactionQuery = new QueryBuilder(
+    Transaction.find().populate({
+      path: 'user',
+      select: 'name profile_image mainSkill',
+      populate: { path: 'mainSkill', select: 'name' },
+    }),
+    query,
+  )
+    .search(['email'])
     .fields()
     .filter()
     .paginate()
