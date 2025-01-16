@@ -64,21 +64,45 @@ const renewSubscription = async (profileId: string) => {
   }
   const userId = normalUser._id.toString();
   const amountInCent = subscriptionPrice * 100;
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amountInCent,
-    currency: 'usd',
+  // const paymentIntent = await stripe.paymentIntents.create({
+  //   amount: amountInCent,
+  //   currency: 'usd',
+  //   payment_method_types: ['card'],
+  //   metadata: {
+  //     paymentPurpose: ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION,
+  //     customerName: normalUser.name,
+  //     email: normalUser.email,
+  //     userId,
+  //   },
+  // });
+
+  // return {
+  //   client_secret: paymentIntent.client_secret,
+  // };
+  const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
+    mode: 'payment',
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: `Purchase Subscription`,
+          },
+          unit_amount: amountInCent,
+        },
+        quantity: 1,
+      },
+    ],
     metadata: {
-      paymentPurpose: ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION,
-      customerName: normalUser.name,
-      email: normalUser.email,
       userId,
+      paymentPurpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
     },
+    success_url: `${config.stripe.payment_success_url}?collaborationId=${userId}`,
+    cancel_url: `${config.stripe.payment_success_url}`,
   });
 
-  return {
-    client_secret: paymentIntent.client_secret,
-  };
+  return { url: session.url };
 };
 
 const SubscriptionService = {
