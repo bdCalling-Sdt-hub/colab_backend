@@ -45,10 +45,14 @@ const handleWebhook = async (req: Request, res: Response) => {
         const paymentIntent = await stripe.paymentIntents.retrieve(
           paymentIntentId as string,
         );
-        console.log(paymentIntent); // You can access details like payment status, transaction amount, etc.
+        console.log('payment intent', paymentIntent); // You can access details like payment status, transaction amount, etc.
 
         console.log(`Checkout completed for session: ${session.id}`);
-        await handlePaymentSuccess(session.metadata, paymentIntent.id);
+        await handlePaymentSuccess(
+          session.metadata,
+          paymentIntent.id,
+          paymentIntent.amount / 100,
+        );
 
         // Perform any post-payment actions, like updating your database
         // Example: Activate the collaboration or update the status

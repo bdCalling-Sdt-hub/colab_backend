@@ -46,7 +46,7 @@ const purchaseSubscription = async (profileId: string) => {
     ],
     metadata: {
       userId,
-      paymentPurpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
+      paymentPurpose: ENUM_PAYMENT_PURPOSE.PURCHASE_SUBSCRIPTION,
     },
     success_url: `${config.stripe.payment_success_url}?collaborationId=${userId}`,
     cancel_url: `${config.stripe.payment_success_url}`,
@@ -96,7 +96,7 @@ const renewSubscription = async (profileId: string) => {
     ],
     metadata: {
       userId,
-      paymentPurpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
+      paymentPurpose: ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION,
     },
     success_url: `${config.stripe.payment_success_url}?collaborationId=${userId}`,
     cancel_url: `${config.stripe.payment_success_url}`,

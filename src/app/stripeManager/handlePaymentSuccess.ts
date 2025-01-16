@@ -6,12 +6,22 @@ import NormalUser from '../modules/normalUser/normalUser.model';
 import {
   ENUM_COLLABORATION_STATUS,
   ENUM_PAYMENT_PURPOSE,
+  ENUM_TRANSACTION_TYPE,
 } from '../utilities/enum';
 import Collaboration from '../modules/collaboration/collaboration.model';
+import Transaction from '../modules/transaction/transaction.model';
 
-const handlePaymentSuccess = async (metaData: any, transactionId: string) => {
+const handlePaymentSuccess = async (
+  metaData: any,
+  transactionId: string,
+  amount: number,
+) => {
   if (metaData.paymentPurpose == ENUM_PAYMENT_PURPOSE.PURCHASE_SUBSCRIPTION) {
-    await handleSubcriptionPurchaseSuccess(metaData.userId, transactionId);
+    await handleSubcriptionPurchaseSuccess(
+      metaData.userId,
+      transactionId,
+      amount,
+    );
   } else if (
     metaData.paymentPurpose == ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION
   ) {
@@ -29,6 +39,7 @@ const handlePaymentSuccess = async (metaData: any, transactionId: string) => {
 const handleSubcriptionPurchaseSuccess = async (
   userId: string,
   transactionId: string,
+  amount: number,
 ) => {
   console.log(transactionId);
   const normalUser = await NormalUser.findById(userId);
@@ -45,6 +56,12 @@ const handleSubcriptionPurchaseSuccess = async (
     },
     { new: true, runValidators: true },
   );
+  await Transaction.create({
+    user: normalUser?._id,
+    email: normalUser?.email,
+    type: ENUM_TRANSACTION_TYPE.SUBSCRIPTION_PURCHASE,
+    amount: amount,
+  });
 };
 
 const handleSubscriptionRenewSuccess = async (
