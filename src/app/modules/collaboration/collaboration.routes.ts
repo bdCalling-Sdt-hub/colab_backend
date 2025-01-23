@@ -19,7 +19,6 @@ router.get(
   auth(USER_ROLE.user),
   CollaborationController.getMyCollaborations,
 );
-
 router.get(
   '/all-collaborations',
   auth(USER_ROLE.superAdmin),
@@ -44,6 +43,8 @@ router.post(
   auth(USER_ROLE.user),
   CollaborationController.acceptCollaboration,
 );
+
+// mark as completed
 router.post(
   '/mark-as-complete/:id',
   auth(USER_ROLE.user),

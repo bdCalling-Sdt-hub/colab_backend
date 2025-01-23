@@ -53,7 +53,6 @@ const handleWebhook = async (req: Request, res: Response) => {
           paymentIntent.id,
           paymentIntent.amount / 100,
         );
-
         // Perform any post-payment actions, like updating your database
         // Example: Activate the collaboration or update the status
 
