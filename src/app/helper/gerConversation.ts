@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Conversation from '../modules/conversation/conversation.model';
 
 export const getConversation = async (crntUserId: string) => {
@@ -14,7 +15,7 @@ export const getConversation = async (crntUserId: string) => {
       .populate('receiver');
     // console.log('currentUserConversation', currentUserConversation);
     const conversation = currentUserConversation?.map((conv) => {
-      const countUnseenMessage = conv.messages?.reduce((prev, curr) => {
+      const countUnseenMessage = conv.messages?.reduce((prev, curr: any) => {
         const msgByUserId = curr?.msgByUserId?.toString();
         if (msgByUserId !== crntUserId) {
           return prev + (curr?.seen ? 0 : 1);
