@@ -11,6 +11,7 @@ import {
 import Stripe from 'stripe';
 import config from '../../config';
 import { INormalUser } from '../normalUser/normalUser.interface';
+import isAccountReady from '../../helper/isAccountReady';
 const stripe = new Stripe(config.stripe.stripe_secret_key as string);
 // send collaboraton --------------
 const sendCollaborationRequest = async (profileId: string, payload: any) => {
@@ -240,17 +241,25 @@ const markAsComplete = async (profileId: string, collaborationId: string) => {
   }
 
   const moneyReceiver = await NormalUser.findById(collaboration.sender);
-  if (
-    !moneyReceiver ||
-    !moneyReceiver?.isStripeConnected ||
-    !moneyReceiver?.stripeAccountId
-  ) {
+  if (!moneyReceiver) {
     throw new AppError(
       httpStatus.PARTIAL_CONTENT,
       'Payment receiver not found , contact with collaborator',
     );
   }
-
+  if (!moneyReceiver?.stripeAccountId) {
+    throw new AppError(
+      httpStatus.PARTIAL_CONTENT,
+      'Payment receiver acount details not completed, contact with collaborator',
+    );
+  }
+  const isReady = await isAccountReady(moneyReceiver.stripeAccountId);
+  if (!moneyReceiver?.isStripeConnected || !isReady) {
+    throw new AppError(
+      httpStatus.PARTIAL_CONTENT,
+      'Payment receiver acount details not completed, contact with collaborator',
+    );
+  }
   const amountInCent = collaboration.price * 100;
   try {
     // Transfer funds
