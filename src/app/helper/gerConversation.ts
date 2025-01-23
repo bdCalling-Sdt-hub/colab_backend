@@ -16,7 +16,6 @@ export const getConversation = async (crntUserId: string) => {
     const conversation = currentUserConversation?.map((conv) => {
       const countUnseenMessage = conv.messages?.reduce((prev, curr) => {
         const msgByUserId = curr?.msgByUserId?.toString();
-
         if (msgByUserId !== crntUserId) {
           return prev + (curr?.seen ? 0 : 1);
         } else {
