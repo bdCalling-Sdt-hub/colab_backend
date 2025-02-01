@@ -13,6 +13,8 @@ import cron from 'node-cron';
 import sendEmail from '../../utilities/sendEmail';
 import { JwtPayload } from 'jsonwebtoken';
 import unlinkFile from '../../helper/unlinkFile';
+import SuperAdmin from '../superAdmin/superAdmin.model';
+import Category from '../category/category.model';
 const generateVerifyCode = (): number => {
   return Math.floor(10000 + Math.random() * 90000);
 };
@@ -120,7 +122,11 @@ const resendVerifyCode = async (email: string) => {
 const getMyProfile = async (userData: JwtPayload) => {
   let result = null;
   if (userData.role === USER_ROLE.user) {
-    result = await NormalUser.findOne({ email: userData.email });
+    const user = await NormalUser.findOne({ email: userData.email });
+    const category = await Category.find();
+    result = { ...user?.toObject(), category };
+  } else if (userData.role === USER_ROLE.superAdmin) {
+    result = await SuperAdmin.findOne({ email: userData.email });
   }
   return result;
 };
