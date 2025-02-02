@@ -212,6 +212,7 @@ const markAsComplete = async (profileId: string, collaborationId: string) => {
   const collaboration = await Collaboration.findOne({
     _id: collaborationId,
     receiver: profileId,
+    status: ENUM_COLLABORATION_STATUS.UPCOMING,
   });
   if (!collaboration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
