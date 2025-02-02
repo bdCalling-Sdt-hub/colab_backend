@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import config from '../config';
 import { Request, Response } from 'express';
 import handlePaymentSuccess from './handlePaymentSuccess';
+import updateStripeConnectedAccountStatus from './updateStripeAccountConnectedStatus';
 
 const stripe = new Stripe(config.stripe.stripe_secret_key as string);
 const handleWebhook = async (req: Request, res: Response) => {
@@ -56,6 +57,23 @@ const handleWebhook = async (req: Request, res: Response) => {
         // Perform any post-payment actions, like updating your database
         // Example: Activate the collaboration or update the status
 
+        break;
+      }
+      case 'account.updated': {
+        console.log('web hook account update');
+        const account = event.data.object as Stripe.Account;
+        console.log('acount', account);
+        if (account.details_submitted) {
+          try {
+            console.log('details submited');
+            await updateStripeConnectedAccountStatus(account.id);
+          } catch (err) {
+            console.error(
+              `Failed to update client status for Stripe account ID: ${account.id}`,
+              err,
+            );
+          }
+        }
         break;
       }
       case 'payment_intent.payment_failed': {

@@ -12,6 +12,7 @@ import Stripe from 'stripe';
 import config from '../../config';
 import { INormalUser } from '../normalUser/normalUser.interface';
 import isAccountReady from '../../helper/isAccountReady';
+import { adminFeeParcent } from '../../constant';
 const stripe = new Stripe(config.stripe.stripe_secret_key as string);
 // send collaboraton --------------
 const sendCollaborationRequest = async (profileId: string, payload: any) => {
@@ -233,10 +234,14 @@ const markAsComplete = async (profileId: string, collaborationId: string) => {
   if (!moneyReceiver?.isStripeConnected || !isReady) {
     throw new AppError(
       httpStatus.PARTIAL_CONTENT,
-      'Payment receiver acount details not completed, contact with collaborator',
+      'Payment receiver acount details not completed, contact with collaborator!',
     );
   }
-  const amountInCent = collaboration.price * 100;
+  const totalAmount = collaboration.price;
+  const adminFee = (collaboration.price * adminFeeParcent) / 100;
+  const payableAmount = totalAmount - adminFee;
+  const amountInCent = payableAmount * 100;
+
   try {
     // Transfer funds
     const transfer: any = await stripe.transfers.create({

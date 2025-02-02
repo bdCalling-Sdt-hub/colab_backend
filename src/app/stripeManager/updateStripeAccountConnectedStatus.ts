@@ -8,11 +8,12 @@ const updateStripeConnectedAccountStatus = async (accountId: string) => {
   }
 
   try {
-    NormalUser.findOneAndUpdate(
+    const updatedUser = await NormalUser.findOneAndUpdate(
       { stripeAccountId: accountId },
       { isStripeConnected: true },
       { new: true, runValidators: true },
     );
+    console.log('updated user', updatedUser);
   } catch (err) {
     return {
       success: false,
