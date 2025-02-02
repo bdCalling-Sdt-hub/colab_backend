@@ -6,12 +6,12 @@ const conversationSchema = new Schema<IConversation>(
     sender: {
       type: mongoose.Schema.ObjectId,
       required: true,
-      ref: 'User',
+      ref: 'NormalUser',
     },
     receiver: {
       type: mongoose.Schema.ObjectId,
       required: true,
-      ref: 'User',
+      ref: 'NormalUser',
     },
     messages: [
       {

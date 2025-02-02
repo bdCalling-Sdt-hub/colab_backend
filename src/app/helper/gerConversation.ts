@@ -13,26 +13,37 @@ export const getConversation = async (crntUserId: string) => {
       })
       .populate('sender')
       .populate('receiver');
-    // console.log('currentUserConversation', currentUserConversation);
-    const conversation = currentUserConversation?.map((conv) => {
-      const countUnseenMessage = conv.messages?.reduce((prev, curr: any) => {
-        const msgByUserId = curr?.msgByUserId?.toString();
-        if (msgByUserId !== crntUserId) {
-          return prev + (curr?.seen ? 0 : 1);
-        } else {
-          return prev;
-        }
-      }, 0);
-      return {
-        _id: conv?._id,
-        sender: conv?.sender,
-        receiver: conv?.receiver,
-        unseenMsg: countUnseenMessage,
-        lastMsg: conv?.messages[conv?.messages?.length - 1],
-      };
-    });
-    // socket.emit('conversation', conversation);
-    return conversation;
+    // return conversation;
+    const conversationList = await Promise.all(
+      currentUserConversation?.map(async (conv: any) => {
+        const countUnseenMessage = conv.messages?.reduce(
+          (prev: number, curr: any) =>
+            curr.msgByUserId.toString() !== crntUserId && !curr.seen
+              ? prev + 1
+              : prev,
+          0,
+        );
+
+        // Identify the other user in the conversation
+        const otherUser =
+          conv.sender._id.toString() === crntUserId
+            ? conv.receiver
+            : conv.sender;
+
+        return {
+          _id: conv._id,
+          userData: {
+            _id: otherUser._id,
+            name: otherUser.name,
+            profileImage: otherUser.profile_image,
+          },
+          unseenMsg: countUnseenMessage,
+          lastMsg: conv.messages[conv.messages.length - 1],
+        };
+      }),
+    );
+
+    return conversationList;
   } else {
     return [];
   }

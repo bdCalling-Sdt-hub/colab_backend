@@ -45,19 +45,19 @@ const handleChat = async (
   // new message -----------------------------------
   socket.on('new-message', async (data) => {
     // Handle file upload
-    if (data.file) {
-      const mockReq = { body: {}, file: data.file };
-      const mockRes = {};
-      await uploadSingle(mockReq, mockRes);
+    // if (data.file) {
+    //   const mockReq = { body: {}, file: data.file };
+    //   const mockRes = {};
+    //   await uploadSingle(mockReq, mockRes);
 
-      const fileType = mockReq.file.mimetype.split('/')[0];
-      if (fileType === 'image')
-        data.imageUrl = `/uploads/message-media/image/${mockReq.file.filename}`;
-      if (fileType === 'video')
-        data.videoUrl = `/uploads/message-media/video/${mockReq.file.filename}`;
-      if (fileType === 'audio')
-        data.audioUrl = `/uploads/message-media/audio/${mockReq.file.filename}`;
-    }
+    //   const fileType = mockReq.file.mimetype.split('/')[0];
+    //   if (fileType === 'image')
+    //     data.imageUrl = `/uploads/message-media/image/${mockReq.file.filename}`;
+    //   if (fileType === 'video')
+    //     data.videoUrl = `/uploads/message-media/video/${mockReq.file.filename}`;
+    //   if (fileType === 'audio')
+    //     data.audioUrl = `/uploads/message-media/audio/${mockReq.file.filename}`;
+    // }
     let conversation = await Conversation.findOne({
       $or: [
         { sender: data?.sender, receiver: data?.receiver },
@@ -73,9 +73,9 @@ const handleChat = async (
     }
     const messageData = {
       text: data.text,
-      imageUrl: data.imageUrl,
-      videoUrl: data.videoUrl,
-      audioUrl: data.audioUrl,
+      // imageUrl: data.imageUrl,
+      // videoUrl: data.videoUrl,
+      // audioUrl: data.audioUrl,
       msgByUserId: data?.msgByUserId,
     };
     const saveMessage = await Message.create(messageData);
@@ -108,7 +108,7 @@ const handleChat = async (
   });
 
   // sidebar
-  socket.on('sidebar', async (crntUserId) => {
+  socket.on('chat-list', async (crntUserId) => {
     const conversation = await getConversation(crntUserId);
     socket.emit('conversation', conversation);
   });
