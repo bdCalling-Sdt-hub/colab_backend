@@ -64,7 +64,6 @@ const handleChat = async (
         { sender: data?.receiver, receiver: data?.sender },
       ],
     });
-    // if conversation is not available then create a new conversation----------
     if (!conversation) {
       conversation = await Conversation.create({
         sender: data?.sender,
@@ -79,22 +78,12 @@ const handleChat = async (
       msgByUserId: data?.msgByUserId,
     };
     const saveMessage = await Message.create(messageData);
-    // update the conversation
     await Conversation.updateOne(
       { _id: conversation?._id },
       {
         $push: { messages: saveMessage?._id },
       },
     );
-    // get the conversation
-    // const getConversationMessage = await Conversation.findOne({
-    //   $or: [
-    //     { sender: data?.sender, receiver: data?.receiver },
-    //     { sender: data?.receiver, receiver: data?.sender },
-    //   ],
-    // })
-    //   .populate('messages')
-    //   .sort({ updatedAt: -1 });
     // send to the frontend only new message data ---------------
     io.to(data?.sender).emit('message', messageData);
     io.to(data?.receiver).emit('message', messageData);
@@ -107,13 +96,13 @@ const handleChat = async (
     io.to(data?.receiver).emit('conversation', conversationReceiver);
   });
 
-  // sidebar
+  // chat list -------------------
   socket.on('chat-list', async (crntUserId) => {
     const conversation = await getConversation(crntUserId);
     socket.emit('conversation', conversation);
   });
 
-  // send
+  // send------------------------
   socket.on('seen', async (msgByUserId) => {
     const conversation = await Conversation.findOne({
       $or: [
@@ -121,15 +110,13 @@ const handleChat = async (
         { sender: msgByUserId, receiver: currentUserId },
       ],
     });
-
     const conversationMessageId = conversation?.messages || [];
-    // update the messages
     await Message.updateMany(
       { _id: { $in: conversationMessageId }, msgByUserId: msgByUserId },
       { $set: { seen: true } },
     );
 
-    //send conversation
+    //send conversation --------------
     const conversationSender = await getConversation(currentUserId as string);
     const conversationReceiver = await getConversation(msgByUserId);
 
