@@ -24,7 +24,7 @@ export default {
     webhook_endpoint_secret: process.env.WEBHOOK_ENDPOINT_SECRET,
     onboarding_return_url: process.env.ONBOARDING_RETURN_URL,
     onboarding_refresh_url: process.env.ONBOARDING_REFRESH_URL,
-    subscription_paypal_success_url:
+    subscription_payment_success_url:
       process.env.STRIPE_SUBSCRIPTION_PURCHASE_SUCCESS_URL,
     subscription_payment_cancel_url:
       process.env.STRIPE_SUBSCRIPTION_PURCHASE_CANCEL_URL,

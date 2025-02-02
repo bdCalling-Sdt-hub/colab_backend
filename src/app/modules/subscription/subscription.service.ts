@@ -34,8 +34,8 @@ const purchaseSubscription = async (profileId: string) => {
       userId,
       paymentPurpose: ENUM_PAYMENT_PURPOSE.PURCHASE_SUBSCRIPTION,
     },
-    success_url: `${config.stripe.payment_success_url}?collaborationId=${userId}`,
-    cancel_url: `${config.stripe.payment_success_url}`,
+    success_url: `${config.stripe.subscription_payment_success_url}?collaborationId=${userId}`,
+    cancel_url: `${config.stripe.subscription_payment_cancel_url}`,
   });
 
   return { url: session.url };
@@ -84,8 +84,8 @@ const renewSubscription = async (profileId: string) => {
       userId,
       paymentPurpose: ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION,
     },
-    success_url: `${config.stripe.payment_success_url}?collaborationId=${userId}`,
-    cancel_url: `${config.stripe.payment_success_url}`,
+    success_url: `${config.stripe.subscription_renew_success_url}?collaborationId=${userId}`,
+    cancel_url: `${config.stripe.subscription_renew_cancel_url}`,
   });
 
   return { url: session.url };
