@@ -122,7 +122,12 @@ const resendVerifyCode = async (email: string) => {
 const getMyProfile = async (userData: JwtPayload) => {
   let result = null;
   if (userData.role === USER_ROLE.user) {
-    const user = await NormalUser.findOne({ email: userData.email });
+    const user = await NormalUser.findOne({ email: userData.email })
+      .populate({
+        path: 'mainSkill',
+        select: 'name',
+      })
+      .populate({ path: 'additionalSkills', select: 'name' });
     const category = await Category.find();
     result = { ...user?.toObject(), category };
   } else if (userData.role === USER_ROLE.superAdmin) {
