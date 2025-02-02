@@ -10,7 +10,7 @@ const createConnectedAccountAndOnboardingLink = async (
   userData: JwtPayload,
   profileId: string,
 ) => {
-  const normalUser = await NormalUser.findById(userData?.id);
+  const normalUser = await NormalUser.findById(profileId);
   if (!normalUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -20,6 +20,16 @@ const createConnectedAccountAndOnboardingLink = async (
       httpStatus.BAD_REQUEST,
       'You already added bank information',
     );
+  }
+
+  if (normalUser.stripeAccountId) {
+    const onboardingLink = await stripe.accountLinks.create({
+      account: normalUser.stripeAccountId,
+      refresh_url: `${config.stripe.onboarding_refresh_url}?accountId=${normalUser.stripeAccountId}`,
+      return_url: 'http://localhost:3000/account-created',
+      type: 'account_onboarding',
+    });
+    return onboardingLink.url;
   }
 
   //  Create a connected account
@@ -35,9 +45,11 @@ const createConnectedAccountAndOnboardingLink = async (
 
   const updatedUser = await NormalUser.findByIdAndUpdate(
     profileId,
-    { stripAccountId: account.id },
+    { stripeAccountId: account.id },
     { new: true, runValidators: true },
   );
+
+  console.log('updated user', updatedUser);
 
   if (!updatedUser) {
     throw new AppError(

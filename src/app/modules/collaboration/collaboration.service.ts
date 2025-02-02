@@ -199,8 +199,8 @@ const acceptCollaboration = async (
       collaborationId,
       paymentPurpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
     },
-    success_url: `${config.stripe.payment_success_url}?collaborationId=${collaborationId}`,
-    cancel_url: `${config.stripe.payment_success_url}`,
+    success_url: `${config.stripe.collaboration_success_url}?collaborationId=${collaborationId}`,
+    cancel_url: `${config.stripe.collaboration_cancel_url}`,
   });
 
   return { url: session.url };

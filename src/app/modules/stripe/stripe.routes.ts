@@ -12,7 +12,7 @@ router.post(
 );
 
 router.post(
-  '/update-connected-accout',
+  '/update-connected-account',
   auth(USER_ROLE.user),
   StripeController.updateOnboardingLink,
 );
