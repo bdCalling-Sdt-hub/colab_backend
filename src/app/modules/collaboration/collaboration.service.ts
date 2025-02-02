@@ -165,30 +165,6 @@ const deleteCollaboration = async (
   return result;
 };
 
-// const acceptCollaboration = async (
-//   profileId: string,
-//   collaborationId: string,
-// ) => {
-//   const collaboration = await Collaboration.findOne({
-//     _id: collaborationId,
-//     receiver: profileId,
-//   });
-//   if (!collaboration) {
-//     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
-//   }
-//   const amountInCents = collaboration.price * 100;
-//   const paymentIntent = await stripe.paymentIntents.create({
-//     amount: amountInCents,
-//     currency: 'usd',
-//     payment_method_types: ['card'],
-//     metadata: {
-//       collaborationId,
-//       purpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
-//     },
-//   });
-//   return { client_secret: paymentIntent.client_secret };
-// };
-
 const acceptCollaboration = async (
   profileId: string,
   collaborationId: string,

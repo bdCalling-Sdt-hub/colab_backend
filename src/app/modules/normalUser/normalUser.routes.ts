@@ -7,7 +7,7 @@ import NormalUserController from './normalUser.controller';
 import { uploadFile } from '../../helper/fileUploader';
 
 const router = express.Router();
-
+// update profile for normal user ----------------
 router.patch(
   '/update-profile',
   auth(USER_ROLE.user),
