@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import httpStatus from 'http-status';
 import AppError from '../../error/appError';
-import { INormalUser } from './normalUser.interface';
 import NormalUser from './normalUser.model';
 import { JwtPayload } from 'jsonwebtoken';
 import unlinkFile from '../../helper/unlinkFile';

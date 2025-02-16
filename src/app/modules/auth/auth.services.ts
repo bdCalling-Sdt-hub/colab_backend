@@ -53,9 +53,28 @@ const loginUserIntoDB = async (payload: TLoginUser) => {
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string,
   );
+  let isAdditionalSkillProvided;
+  let isMailSkillProvided;
+  let isVideosAdded;
+  let isPremium;
+  if (user.role === USER_ROLE.user) {
+    const userData = await NormalUser.findOne({ user: user._id });
+    if (!userData) {
+      throw new AppError(httpStatus.NOT_FOUND, 'User data not found');
+    }
+    isAdditionalSkillProvided =
+      userData?.additionalSkills?.length > 0 ? true : false;
+    isMailSkillProvided = userData?.mainSkill ? true : false;
+    isVideosAdded = userData?.videos.length > 0 ? true : false;
+    isPremium = userData.isPremium;
+  }
   return {
     accessToken,
     refreshToken,
+    isAdditionalSkillProvided,
+    isMailSkillProvided,
+    isVideosAdded,
+    isPremium,
   };
 };
 

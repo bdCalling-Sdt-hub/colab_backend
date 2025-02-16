@@ -5,7 +5,7 @@ import AppError from '../../error/appError';
 import httpStatus from 'http-status';
 import { INormalUser } from '../normalUser/normalUser.interface';
 import mongoose from 'mongoose';
-import { TUser } from './user.interface';
+import { TUser, TUserRole } from './user.interface';
 import { USER_ROLE } from './user.constant';
 import NormalUser from '../normalUser/normalUser.model';
 import registrationSuccessEmailBody from '../../mailTemplate/registerSucessEmail';
@@ -15,8 +15,11 @@ import { JwtPayload } from 'jsonwebtoken';
 import unlinkFile from '../../helper/unlinkFile';
 import SuperAdmin from '../superAdmin/superAdmin.model';
 import Category from '../category/category.model';
+import { createToken } from './user.utils';
+import config from '../../config';
+
 const generateVerifyCode = (): number => {
-  return Math.floor(10000 + Math.random() * 90000);
+  return Math.floor(100000 + Math.random() * 900000);
 };
 
 const registerUser = async (
@@ -85,13 +88,31 @@ const verifyCode = async (email: string, verifyCode: number) => {
   if (verifyCode !== user.verifyCode) {
     throw new AppError(httpStatus.BAD_REQUEST, "Code doesn't match");
   }
-  const result = await User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { email: email },
     { isVerified: true },
     { new: true, runValidators: true },
   );
 
-  return result;
+  const jwtPayload = {
+    id: user?._id,
+    email: user?.email,
+    role: user?.role as TUserRole,
+  };
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  );
+  return {
+    accessToken,
+    refreshToken,
+  };
 };
 
 const resendVerifyCode = async (email: string) => {

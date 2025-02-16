@@ -84,7 +84,6 @@ export const getConversation = async (
       // Identify the other user in the conversation
       const otherUser =
         conv.sender._id.toString() === crntUserId ? conv.receiver : conv.sender;
-
       return {
         _id: conv._id,
         userData: {

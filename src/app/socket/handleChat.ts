@@ -4,10 +4,8 @@ import NormalUser from '../modules/normalUser/normalUser.model';
 import Conversation from '../modules/conversation/conversation.model';
 import Message from '../modules/message/message.model';
 import { getConversation } from '../helper/gerConversation';
-// for uplaods----------------
-import { promisify } from 'util';
-import upload from '../utilities/upload';
-const uploadSingle = promisify(upload.single('media'));
+import { getSingleConversation } from '../helper/getSingleConversation';
+
 const handleChat = async (
   io: IOServer,
   socket: Socket,
@@ -28,6 +26,9 @@ const handleChat = async (
       socket.emit('message-user', payload);
     } else {
       console.log('User not found');
+      socket.emit('socket-error', {
+        errorMessage: 'Current user is not exits',
+      });
     }
     //get previous message
     const getConversationMessage = await Conversation.findOne({
@@ -44,20 +45,6 @@ const handleChat = async (
 
   // new message -----------------------------------
   socket.on('new-message', async (data) => {
-    // Handle file upload
-    // if (data.file) {
-    //   const mockReq = { body: {}, file: data.file };
-    //   const mockRes = {};
-    //   await uploadSingle(mockReq, mockRes);
-
-    //   const fileType = mockReq.file.mimetype.split('/')[0];
-    //   if (fileType === 'image')
-    //     data.imageUrl = `/uploads/message-media/image/${mockReq.file.filename}`;
-    //   if (fileType === 'video')
-    //     data.videoUrl = `/uploads/message-media/video/${mockReq.file.filename}`;
-    //   if (fileType === 'audio')
-    //     data.audioUrl = `/uploads/message-media/audio/${mockReq.file.filename}`;
-    // }
     let conversation = await Conversation.findOne({
       $or: [
         { sender: data?.sender, receiver: data?.receiver },
@@ -72,9 +59,8 @@ const handleChat = async (
     }
     const messageData = {
       text: data.text,
-      // imageUrl: data.imageUrl,
-      // videoUrl: data.videoUrl,
-      // audioUrl: data.audioUrl,
+      imageUrl: data.imageUrl || '',
+      videoUrl: data.videoUrl || '',
       msgByUserId: data?.msgByUserId,
     };
     const saveMessage = await Message.create(messageData);
@@ -89,8 +75,14 @@ const handleChat = async (
     io.to(data?.receiver).emit('message', messageData);
 
     //send conversation
-    const conversationSender = await getConversation(data?.sender);
-    const conversationReceiver = await getConversation(data?.receiver);
+    const conversationSender = await getSingleConversation(
+      data?.sender,
+      data?.receiver,
+    );
+    const conversationReceiver = await getSingleConversation(
+      data?.receiver,
+      data?.sender,
+    );
 
     io.to(data?.sender).emit('conversation', conversationSender);
     io.to(data?.receiver).emit('conversation', conversationReceiver);
@@ -99,7 +91,7 @@ const handleChat = async (
   // chat list -------------------
   socket.on('chat-list', async (crntUserId) => {
     const conversation = await getConversation(crntUserId);
-    socket.emit('conversation', conversation);
+    socket.emit('chat-list', conversation);
   });
 
   // send------------------------
