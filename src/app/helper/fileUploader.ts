@@ -37,7 +37,17 @@ export const uploadFile = () => {
         file.mimetype === 'image/png' ||
         file.mimetype === 'image/jpg' ||
         file.mimetype === 'image/webp' ||
-        file.mimetype === 'video/mp4'
+        file.mimetype === 'video/mp4' ||
+        file.mimetype === 'video/mov' ||
+        file.mimetype === 'video/quicktime' ||
+        file.mimetype === 'video/mpeg' ||
+        file.mimetype === 'video/ogg' ||
+        file.mimetype === 'video/webm' ||
+        file.mimetype === 'video/x-msvideo' ||
+        file.mimetype === 'video/x-flv' ||
+        file.mimetype === 'video/3gpp' ||
+        file.mimetype === 'video/3gpp2' ||
+        file.mimetype === 'video/x-matroska'
       ) {
         cb(null, uploadPath);
       } else {
@@ -74,7 +84,17 @@ export const uploadFile = () => {
         file.mimetype === 'image/png' ||
         file.mimetype === 'image/jpg' ||
         file.mimetype === 'image/webp' ||
-        file.mimetype === 'video/mp4'
+        file.mimetype === 'video/mp4' ||
+        file.mimetype === 'video/mov' ||
+        file.mimetype === 'video/quicktime' ||
+        file.mimetype === 'video/mpeg' ||
+        file.mimetype === 'video/ogg' ||
+        file.mimetype === 'video/webm' ||
+        file.mimetype === 'video/x-msvideo' ||
+        file.mimetype === 'video/x-flv' ||
+        file.mimetype === 'video/3gpp' ||
+        file.mimetype === 'video/3gpp2' ||
+        file.mimetype === 'video/x-matroska'
       ) {
         cb(null, true);
       } else {

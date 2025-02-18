@@ -6,7 +6,7 @@ import MetaController from './meta.controller';
 const router = express.Router();
 
 router.get(
-  '/dashboard-meta-data',
+  '/get-dashboard-meta-data',
   auth(USER_ROLE.superAdmin),
   MetaController.getDashboardMetaData,
 );

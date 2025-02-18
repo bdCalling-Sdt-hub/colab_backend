@@ -54,9 +54,12 @@ const increseTotalScroll = catchAsync(async (req, res) => {
   });
 });
 const getAllUser = catchAsync(async (req, res) => {
-  const result = await NormalUserServices.getAllUser(req.query);
+  const result = await NormalUserServices.getAllUser(
+    req?.user?.profileId,
+    req.query,
+  );
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     success: true,
     message: 'User retrieved successfully',
     data: result,
@@ -65,7 +68,7 @@ const getAllUser = catchAsync(async (req, res) => {
 const getSingleUser = catchAsync(async (req, res) => {
   const result = await NormalUserServices.getSingleUser(req.params.id);
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     success: true,
     message: 'User retrieved successfully',
     data: result,

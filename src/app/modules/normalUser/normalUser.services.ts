@@ -8,6 +8,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import unlinkFile from '../../helper/unlinkFile';
 import cron from 'node-cron';
 import QueryBuilder from '../../builder/QueryBuilder';
+import Bookmark from '../bookmark/bookmark.mode';
 const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   const id = userData.profileId;
   if (payload.email) {
@@ -88,7 +89,10 @@ const increseTotalScroll = async (profileId: string) => {
 };
 
 // get all normal user
-const getAllUser = async (query: Record<string, unknown>) => {
+const getAllUser = async (
+  profileId: string,
+  query: Record<string, unknown>,
+) => {
   let filterQuery: Record<string, unknown> = {};
   if (query?.skill) {
     filterQuery = {
@@ -113,10 +117,17 @@ const getAllUser = async (query: Record<string, unknown>) => {
     .sort();
 
   const result = await userQuery.modelQuery;
+  const bookmarks = await Bookmark.find({ user: profileId }).select('shop');
+  const bookmarkedShopIds = new Set(bookmarks.map((b) => b.user.toString()));
+
+  const enrichedResult = result.map((userData) => ({
+    ...userData.toObject(),
+    isBookmark: bookmarkedShopIds.has(userData._id.toString()),
+  }));
   const meta = await userQuery.countTotal();
   return {
     meta,
-    result,
+    result: enrichedResult,
   };
 };
 

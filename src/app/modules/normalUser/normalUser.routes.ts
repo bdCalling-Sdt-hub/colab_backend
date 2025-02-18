@@ -5,6 +5,7 @@ import validateRequest from '../../middlewares/validateRequest';
 import normalUserValidations from './normalUser.validation';
 import NormalUserController from './normalUser.controller';
 import { uploadFile } from '../../helper/fileUploader';
+import simpleAuth from '../../middlewares/simpleAuth';
 
 const router = express.Router();
 // update profile for normal user ----------------
@@ -43,7 +44,8 @@ router.patch(
 
 router.get(
   '/all-users',
-  auth(USER_ROLE.user, USER_ROLE.superAdmin),
+  // auth(USER_ROLE.user, USER_ROLE.superAdmin),
+  simpleAuth,
   NormalUserController.getAllUser,
 );
 router.get(

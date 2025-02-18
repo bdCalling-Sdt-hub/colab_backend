@@ -11,6 +11,7 @@ import { reportRoutes } from '../modules/report/report.routes';
 import { bookmarkRoutes } from '../modules/bookmark/bookmark.routes';
 import { stripeRoutes } from '../modules/stripe/stripe.routes';
 import { transactionRoutes } from '../modules/transaction/transaction.routes';
+import { metaRoutes } from '../modules/meta/meta.routes';
 
 const router = Router();
 
@@ -62,6 +63,10 @@ const moduleRoutes = [
   {
     path: '/transaction',
     router: transactionRoutes,
+  },
+  {
+    path: '/meta',
+    router: metaRoutes,
   },
 ];
 

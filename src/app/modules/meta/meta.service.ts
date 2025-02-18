@@ -1,11 +1,20 @@
 import Category from '../category/category.model';
 import NormalUser from '../normalUser/normalUser.model';
+import Transaction from '../transaction/transaction.model';
 
 const getDashboardMetaData = async () => {
   const totalUser = await NormalUser.countDocuments();
   const totalCategory = await Category.countDocuments();
-  const totalSubscriber = 100;
-  const totalEarning = 100;
+  const totalSubscriber = await NormalUser.countDocuments({ isPremium: true });
+  const total = await Transaction.aggregate([
+    {
+      $group: {
+        _id: null,
+        total: { $sum: '$amount' },
+      },
+    },
+  ]);
+  const totalEarning = total.length > 0 ? total[0].total : 0;
   return { totalUser, totalSubscriber, totalEarning, totalCategory };
 };
 

@@ -52,7 +52,7 @@ const resetPasswordValidationSchema = z.object({
 const verifyResetOtpValidationSchema = z.object({
   body: z.object({
     email: z.string({ required_error: 'Email is required' }),
-    resetCode: z.number({
+    resetCode: z.string({
       required_error: 'Reset code is required',
       invalid_type_error: 'Reset code must be number',
     }),
