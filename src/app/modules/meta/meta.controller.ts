@@ -22,10 +22,22 @@ const getUserChartData = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getSubscriptionChartData = catchAsync(async (req, res) => {
+  const result = await MetaService.getSubscriptionChartData(
+    Number(req?.query.year),
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Subscription chart data retrieved successfully',
+    data: result,
+  });
+});
 
 const MetaController = {
   getDashboardMetaData,
   getUserChartData,
+  getSubscriptionChartData,
 };
 
 export default MetaController;

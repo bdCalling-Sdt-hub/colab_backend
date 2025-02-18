@@ -16,5 +16,10 @@ router.get(
   auth(USER_ROLE.superAdmin),
   MetaController.getUserChartData,
 );
+router.get(
+  '/subscription-chart-data',
+  auth(USER_ROLE.superAdmin),
+  MetaController.getSubscriptionChartData,
+);
 
 export const metaRoutes = router;
