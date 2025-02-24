@@ -13,6 +13,8 @@ import { stripeRoutes } from '../modules/stripe/stripe.routes';
 import { transactionRoutes } from '../modules/transaction/transaction.routes';
 import { metaRoutes } from '../modules/meta/meta.routes';
 import { superAdminRoutes } from '../modules/superAdmin/superAdmin.routes';
+import { conversationRoutes } from '../modules/conversation/conversation.routes';
+import { videoRoutes } from '../modules/video/video.routes';
 
 const router = Router();
 
@@ -72,6 +74,14 @@ const moduleRoutes = [
   {
     path: '/super-admin',
     router: superAdminRoutes,
+  },
+  {
+    path: '/conversation',
+    router: conversationRoutes,
+  },
+  {
+    path: '/video',
+    router: videoRoutes,
   },
 ];
 

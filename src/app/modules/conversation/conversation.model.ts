@@ -13,17 +13,22 @@ const conversationSchema = new Schema<IConversation>(
       required: true,
       ref: 'NormalUser',
     },
-    messages: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Message',
-      },
-    ],
+    // messages: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'Message',
+    //   },
+    // ],
+    lastMessage: {
+      type: Schema.Types.ObjectId,
+      required: true,
+    },
   },
   {
     timestamps: true,
   },
 );
+conversationSchema.index({ sender: 1, receiver: 1 });
 
 const Conversation = model<IConversation>('Conversation', conversationSchema);
 

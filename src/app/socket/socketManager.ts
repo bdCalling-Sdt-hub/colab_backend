@@ -4,6 +4,7 @@ import { Server as IOServer, Socket } from 'socket.io';
 import { Server as HTTPServer } from 'http';
 import handleChat from './handleChat';
 import NormalUser from '../modules/normalUser/normalUser.model';
+import handleChat2 from './handleChat2';
 let io: IOServer;
 
 const initializeSocket = (server: HTTPServer) => {
@@ -37,7 +38,7 @@ const initializeSocket = (server: HTTPServer) => {
       // send to the client
 
       // handle chat -------------------
-      await handleChat(io, socket, onlineUser, currentUserId);
+      await handleChat2(io, socket, onlineUser, currentUserId);
       io.emit('onlineUser', Array.from(onlineUser));
       socket.on('disconnect', () => {
         console.log('A user disconnected:', socket.id);

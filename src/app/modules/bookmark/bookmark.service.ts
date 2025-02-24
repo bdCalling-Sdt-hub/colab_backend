@@ -44,7 +44,12 @@ const getMyBookmarkFromDB = async (
       populate: { path: 'mainSkill', select: 'name' },
     }),
     query,
-  );
+  )
+    .search(['incidentType'])
+    .fields()
+    .filter()
+    .paginate()
+    .sort();
   const result = await bookmarkQuery.modelQuery;
   const meta = await bookmarkQuery.countTotal();
   return {

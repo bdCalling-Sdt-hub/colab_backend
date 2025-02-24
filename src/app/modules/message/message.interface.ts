@@ -6,4 +6,5 @@ export interface IMessage {
   videoUrl: string;
   seen: boolean;
   msgByUserId: Types.ObjectId;
+  conversationId: Types.ObjectId;
 }
