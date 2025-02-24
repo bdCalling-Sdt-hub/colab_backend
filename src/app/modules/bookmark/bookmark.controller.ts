@@ -21,6 +21,7 @@ const bookmarkAddDelete = catchAsync(async (req, res) => {
 const getMyBookmark = catchAsync(async (req, res) => {
   const result = await BookmarkService.getMyBookmarkFromDB(
     req?.user?.profileId,
+    req.query,
   );
 
   sendResponse(res, {
