@@ -15,6 +15,7 @@ import { metaRoutes } from '../modules/meta/meta.routes';
 import { superAdminRoutes } from '../modules/superAdmin/superAdmin.routes';
 import { conversationRoutes } from '../modules/conversation/conversation.routes';
 import { videoRoutes } from '../modules/video/video.routes';
+import { messageRoutes } from '../modules/message/message.routes';
 
 const router = Router();
 
@@ -82,6 +83,10 @@ const moduleRoutes = [
   {
     path: '/video',
     router: videoRoutes,
+  },
+  {
+    path: '/message',
+    router: messageRoutes,
   },
 ];
 

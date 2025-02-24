@@ -17,6 +17,7 @@ import SuperAdmin from '../superAdmin/superAdmin.model';
 import Category from '../category/category.model';
 import { createToken } from './user.utils';
 import config from '../../config';
+import Video from '../video/video.model';
 
 const generateVerifyCode = (): number => {
   return Math.floor(100000 + Math.random() * 900000);
@@ -150,7 +151,10 @@ const getMyProfile = async (userData: JwtPayload) => {
       })
       .populate({ path: 'additionalSkills', select: 'name' });
     const category = await Category.find();
-    result = { ...user?.toObject(), category };
+    const videos = await Video.find({ user: userData.profileId }).select(
+      'thumbnail video _id',
+    );
+    result = { ...user?.toObject(), category, videos };
   } else if (userData.role === USER_ROLE.superAdmin) {
     result = await SuperAdmin.findOne({ email: userData.email });
   }

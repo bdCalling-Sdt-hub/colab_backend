@@ -63,6 +63,7 @@ const handleChat2 = async (
       msgByUserId: data?.msgByUserId,
       conversationId: conversation?._id,
     };
+    // console.log('message dta', messageData);
     const saveMessage = await Message.create(messageData);
     await Conversation.updateOne(
       { _id: conversation?._id },
@@ -88,12 +89,6 @@ const handleChat2 = async (
     io.to(data?.receiver).emit('conversation', conversationReceiver);
   });
 
-  // chat list -------------------
-  socket.on('chat-list', async (crntUserId) => {
-    const conversation = await getConversation(crntUserId);
-    socket.emit('chat-list', conversation);
-  });
-
   // send------------------------
   socket.on('seen', async (msgByUserId) => {
     const conversation = await Conversation.findOne({
@@ -102,9 +97,8 @@ const handleChat2 = async (
         { sender: msgByUserId, receiver: currentUserId },
       ],
     });
-    const conversationMessageId = conversation?.messages || [];
     await Message.updateMany(
-      { _id: { $in: conversationMessageId }, msgByUserId: msgByUserId },
+      { conversationId: conversation?._id, msgByUserId: msgByUserId },
       { $set: { seen: true } },
     );
 

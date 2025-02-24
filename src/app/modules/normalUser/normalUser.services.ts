@@ -9,6 +9,7 @@ import unlinkFile from '../../helper/unlinkFile';
 import cron from 'node-cron';
 import QueryBuilder from '../../builder/QueryBuilder';
 import Bookmark from '../bookmark/bookmark.mode';
+import Video from '../video/video.model';
 const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   const id = userData.profileId;
   if (payload.email) {
@@ -89,11 +90,57 @@ const increseTotalScroll = async (profileId: string) => {
 };
 
 // get all normal user
+// const getAllUser = async (
+//   profileId: string,
+//   query: Record<string, unknown>,
+// ) => {
+//   let filterQuery: Record<string, unknown> = {};
+//   if (query?.skill) {
+//     filterQuery = {
+//       $or: [
+//         { mainSkill: query.skill },
+//         { additionalSkills: { $in: [query.skill] } },
+//       ],
+//     };
+//     delete query.skill;
+//   }
+
+//   const userQuery = new QueryBuilder(
+//     NormalUser.find(filterQuery)
+//       .populate({ path: 'mainSkill', select: 'name' })
+//       .populate({ path: 'additionalSkills', select: 'name' })
+//       .populate({ path: 'user', select: 'status' }),
+
+//     query,
+//   )
+//     .search(['name'])
+//     .fields()
+//     .filter()
+//     .paginate()
+//     .sort();
+
+//   const result = await userQuery.modelQuery;
+//   const bookmarks = await Bookmark.find({ user: profileId });
+//   const bookmarkedShopIds = new Set(
+//     bookmarks.map((b) => b?.profile?.toString()),
+//   );
+//   const enrichedResult = result.map((userData) => ({
+//     ...userData.toObject(),
+//     isBookmark: bookmarkedShopIds.has(userData?._id.toString()),
+//   }));
+//   const meta = await userQuery.countTotal();
+//   return {
+//     meta,
+//     result: enrichedResult,
+//   };
+// };
+
 const getAllUser = async (
   profileId: string,
   query: Record<string, unknown>,
 ) => {
   let filterQuery: Record<string, unknown> = {};
+
   if (query?.skill) {
     filterQuery = {
       $or: [
@@ -104,12 +151,12 @@ const getAllUser = async (
     delete query.skill;
   }
 
+  // Query to fetch users with filtering, pagination, and sorting
   const userQuery = new QueryBuilder(
     NormalUser.find(filterQuery)
       .populate({ path: 'mainSkill', select: 'name' })
       .populate({ path: 'additionalSkills', select: 'name' })
       .populate({ path: 'user', select: 'status' }),
-
     query,
   )
     .search(['name'])
@@ -119,15 +166,36 @@ const getAllUser = async (
     .sort();
 
   const result = await userQuery.modelQuery;
+
+  // Fetch bookmarks for the current profileId
   const bookmarks = await Bookmark.find({ user: profileId });
   const bookmarkedShopIds = new Set(
     bookmarks.map((b) => b?.profile?.toString()),
   );
-  const enrichedResult = result.map((userData) => ({
-    ...userData.toObject(),
-    isBookmark: bookmarkedShopIds.has(userData?._id.toString()),
-  }));
+
+  // Fetch videos for all users in one query
+  const userIds = result.map((user) => user._id);
+  const allVideos = await Video.find({ user: { $in: userIds } }).select(
+    'thumbnail video _id user',
+  );
+
+  // Map users and attach videos
+  const enrichedResult = await Promise.all(
+    result.map(async (userData) => {
+      const userVideos = allVideos.filter(
+        (video) => video.user.toString() === userData._id.toString(),
+      );
+
+      return {
+        ...userData.toObject(),
+        videos: userVideos,
+        isBookmark: bookmarkedShopIds.has(userData?._id.toString()),
+      };
+    }),
+  );
+
   const meta = await userQuery.countTotal();
+
   return {
     meta,
     result: enrichedResult,

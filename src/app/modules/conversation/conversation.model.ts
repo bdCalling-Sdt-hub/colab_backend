@@ -21,7 +21,7 @@ const conversationSchema = new Schema<IConversation>(
     // ],
     lastMessage: {
       type: Schema.Types.ObjectId,
-      required: true,
+      ref: 'Message',
     },
   },
   {

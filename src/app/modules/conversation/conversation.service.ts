@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import QueryBuilder from '../../builder/QueryBuilder';
+import Message from '../message/message.model';
 import NormalUser from '../normalUser/normalUser.model';
 import Conversation from './conversation.model';
 
@@ -31,13 +32,9 @@ const getConversation = async (
       ...userSearchFilter,
     })
       .sort({ updatedAt: -1 })
-      .populate({
-        path: 'messages',
-        model: 'Message',
-        options: { sort: { createdAt: -1 }, limit: 1 },
-      })
-      .populate('sender')
-      .populate('receiver'),
+      .populate({ path: 'sender', select: 'name profile_image _id email' })
+      .populate({ path: 'receiver', select: 'name profile_image _id email' })
+      .populate('lastMessage'),
     query,
   )
     .fields()
@@ -46,15 +43,14 @@ const getConversation = async (
     .sort();
 
   const currentUserConversation = await currentUserConversationQuery.modelQuery;
+
   const conversationList = await Promise.all(
     currentUserConversation.map(async (conv: any) => {
-      const countUnseenMessage = conv.messages?.reduce(
-        (prev: number, curr: any) =>
-          curr.msgByUserId.toString() !== profileId && !curr.seen
-            ? prev + 1
-            : prev,
-        0,
-      );
+      const countUnseenMessage = await Message.countDocuments({
+        conversationId: conv._id,
+        msgByUserId: { $ne: profileId },
+        seen: false,
+      });
 
       const otherUser =
         conv.sender._id.toString() == profileId ? conv.receiver : conv.sender;
@@ -64,9 +60,10 @@ const getConversation = async (
           _id: otherUser._id,
           name: otherUser.name,
           profileImage: otherUser.profile_image,
+          email: otherUser.email,
         },
         unseenMsg: countUnseenMessage,
-        lastMsg: conv.messages[conv.messages.length - 1],
+        lastMsg: conv.lastMessage,
       };
     }),
   );

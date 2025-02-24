@@ -2,6 +2,7 @@
 import { Types } from 'mongoose';
 
 export interface INormalUser {
+  // _id: string;
   user: Types.ObjectId;
   name: string;
   bio: string;

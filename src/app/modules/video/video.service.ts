@@ -6,6 +6,12 @@ import Video from './video.model';
 
 const AddVideo = async (profileId: string, payload: IVideo) => {
   console.log('payload', payload);
+  if (payload.video.length < 3 || payload.thumbnail.length < 3) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'video and thumbnail length must be 3',
+    );
+  }
   const videosData = [
     {
       user: profileId,
