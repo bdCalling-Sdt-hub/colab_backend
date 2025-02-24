@@ -28,7 +28,7 @@ router.post(
 
 router.get(
   '/get-my-profile',
-  auth(USER_ROLE.user, USER_ROLE.player, USER_ROLE.team, USER_ROLE.superAdmin),
+  auth(USER_ROLE.user, USER_ROLE.superAdmin),
   userControllers.getMyProfile,
 );
 

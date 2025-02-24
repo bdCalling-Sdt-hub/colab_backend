@@ -15,6 +15,7 @@ const NormalUserSchema = new Schema<INormalUser>(
     },
     bio: {
       type: String,
+      default: '',
     },
     email: {
       type: String,

@@ -107,7 +107,9 @@ const getAllUser = async (
   const userQuery = new QueryBuilder(
     NormalUser.find(filterQuery)
       .populate({ path: 'mainSkill', select: 'name' })
-      .populate({ path: 'additionalSkills', select: 'name' }),
+      .populate({ path: 'additionalSkills', select: 'name' })
+      .populate({ path: 'user', select: 'status' }),
+
     query,
   )
     .search(['name'])
@@ -117,12 +119,13 @@ const getAllUser = async (
     .sort();
 
   const result = await userQuery.modelQuery;
-  const bookmarks = await Bookmark.find({ user: profileId }).select('shop');
-  const bookmarkedShopIds = new Set(bookmarks.map((b) => b.user.toString()));
-
+  const bookmarks = await Bookmark.find({ user: profileId });
+  const bookmarkedShopIds = new Set(
+    bookmarks.map((b) => b?.profile?.toString()),
+  );
   const enrichedResult = result.map((userData) => ({
     ...userData.toObject(),
-    isBookmark: bookmarkedShopIds.has(userData._id.toString()),
+    isBookmark: bookmarkedShopIds.has(userData?._id.toString()),
   }));
   const meta = await userQuery.countTotal();
   return {

@@ -12,6 +12,7 @@ import { bookmarkRoutes } from '../modules/bookmark/bookmark.routes';
 import { stripeRoutes } from '../modules/stripe/stripe.routes';
 import { transactionRoutes } from '../modules/transaction/transaction.routes';
 import { metaRoutes } from '../modules/meta/meta.routes';
+import { superAdminRoutes } from '../modules/superAdmin/superAdmin.routes';
 
 const router = Router();
 
@@ -67,6 +68,10 @@ const moduleRoutes = [
   {
     path: '/meta',
     router: metaRoutes,
+  },
+  {
+    path: '/super-admin',
+    router: superAdminRoutes,
   },
 ];
 
