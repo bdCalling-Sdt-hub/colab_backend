@@ -1,22 +1,24 @@
-import httpStatus from 'http-status';
-import AppError from '../../error/appError';
 import Conversation from '../conversation/conversation.model';
 import Message from './message.model';
 import QueryBuilder from '../../builder/QueryBuilder';
+import NormalUser from '../normalUser/normalUser.model';
 
 const getMessages = async (
   profileId: string,
   userId: string,
   query: Record<string, unknown>,
 ) => {
-  const conversation = await Conversation.findOne({
+  let conversation = await Conversation.findOne({
     $or: [
       { sender: profileId, receiver: userId },
       { sender: userId, receiver: profileId },
     ],
   });
   if (!conversation) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Conversation not found');
+    conversation = await Conversation.create({
+      sender: profileId,
+      receiver: userId,
+    });
   }
 
   const messageQuery = new QueryBuilder(
@@ -30,9 +32,15 @@ const getMessages = async (
     .sort();
   const result = await messageQuery.modelQuery;
   const meta = await messageQuery.countTotal();
+  const userData = await NormalUser.findById(userId)
+    .select('name profile_image')
+    .populate({ path: 'mainSkill', select: 'name' });
   return {
     meta,
-    result,
+    result: {
+      userData,
+      messages: result,
+    },
   };
 };
 

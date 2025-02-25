@@ -13,6 +13,7 @@ import sendEmail from '../../utilities/sendEmail';
 import mongoose from 'mongoose';
 import { USER_ROLE } from '../user/user.constant';
 import NormalUser from '../normalUser/normalUser.model';
+import Video from '../video/video.model';
 
 const generateVerifyCode = (): number => {
   return Math.floor(100000 + Math.random() * 900000);
@@ -62,10 +63,11 @@ const loginUserIntoDB = async (payload: TLoginUser) => {
     if (!userData) {
       throw new AppError(httpStatus.NOT_FOUND, 'User data not found');
     }
+    const videos = await Video.find({ user: userData?._id });
     isAdditionalSkillProvided =
       userData?.additionalSkills?.length > 0 ? true : false;
     isMailSkillProvided = userData?.mainSkill ? true : false;
-    isVideosAdded = userData?.videos.length > 0 ? true : false;
+    isVideosAdded = videos.length >= 3 ? true : false;
     isPremium = userData.isPremium;
   }
   return {
