@@ -156,6 +156,7 @@ const getAllUser = async (
     NormalUser.find({
       ...filterQuery,
       mainSkill: { $exists: true, $ne: null },
+      _id: { $ne: profileId },
     })
       .populate({ path: 'mainSkill', select: 'name' })
       .populate({ path: 'additionalSkills', select: 'name' })
