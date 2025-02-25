@@ -153,7 +153,7 @@ const getAllUser = async (
 
   // Query to fetch users with filtering, pagination, and sorting
   const userQuery = new QueryBuilder(
-    NormalUser.find(filterQuery)
+    NormalUser.find({ ...filterQuery, mainSkill: { $exists: true, $ne: null } })
       .populate({ path: 'mainSkill', select: 'name' })
       .populate({ path: 'additionalSkills', select: 'name' })
       .populate({ path: 'user', select: 'status' }),
@@ -194,11 +194,15 @@ const getAllUser = async (
     }),
   );
 
+  const finalResult = enrichedResult.filter(
+    (result) => result.videos.length >= 3,
+  );
+
   const meta = await userQuery.countTotal();
 
   return {
     meta,
-    result: enrichedResult,
+    result: finalResult,
   };
 };
 
