@@ -25,6 +25,15 @@ const NormalUserSchema = new Schema<INormalUser>(
     address: {
       type: String,
     },
+    city: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
     profile_image: {
       type: String,
       default: '',

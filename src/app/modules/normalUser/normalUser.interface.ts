@@ -2,6 +2,8 @@
 import { Types } from 'mongoose';
 
 export interface INormalUser {
+  _id: any;
+  toObject: any;
   // _id: string;
   user: Types.ObjectId;
   name: string;
@@ -19,4 +21,7 @@ export interface INormalUser {
   todayTotalScroll: number;
   stripeAccountId: string;
   isStripeConnected: boolean;
+  city: string;
+  state: string;
+  country: string;
 }
