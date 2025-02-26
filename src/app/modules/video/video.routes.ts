@@ -18,7 +18,7 @@ router.post(
   },
   VideoController.addVideo,
 );
-router.post(
+router.patch(
   '/update-video/:id',
   auth(USER_ROLE.user),
   uploadFile(),

@@ -1,8 +1,15 @@
+import httpStatus from 'http-status';
 import QueryBuilder from '../../builder/QueryBuilder';
+import AppError from '../../error/appError';
+import NormalUser from '../normalUser/normalUser.model';
 import { IReport } from './report.interface';
 import Report from './report.model';
 
 const createReport = async (profileId: string, payload: IReport) => {
+  const reportTo = await NormalUser.findById(payload.reportTo);
+  if (!reportTo) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Reported user not found');
+  }
   const result = await Report.create({ ...payload, reportFrom: profileId });
   return result;
 };

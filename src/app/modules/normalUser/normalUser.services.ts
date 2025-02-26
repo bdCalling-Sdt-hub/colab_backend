@@ -219,7 +219,12 @@ const getSingleUser = async (id: string) => {
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
-  return result;
+  const videos = await Video.find({ user: id });
+  const updatedResult = {
+    ...result.toObject(),
+    videos,
+  };
+  return updatedResult;
 };
 
 // crone jobs----------------------

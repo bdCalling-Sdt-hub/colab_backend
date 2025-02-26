@@ -5,4 +5,5 @@ export interface IReport {
   reportFrom: Types.ObjectId;
   reportTo: Types.ObjectId;
   incidentType: (typeof ENUM_INCIDENT_TYPE)[keyof typeof ENUM_INCIDENT_TYPE];
+  additionalNote: string;
 }

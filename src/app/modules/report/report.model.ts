@@ -19,6 +19,9 @@ const ReportSchema = new Schema<IReport>(
       enum: Object.values(ENUM_INCIDENT_TYPE),
       required: true,
     },
+    additionalNote: {
+      type: String,
+    },
   },
   { timestamps: true },
 );
