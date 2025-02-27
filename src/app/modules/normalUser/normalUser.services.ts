@@ -10,6 +10,8 @@ import cron from 'node-cron';
 import QueryBuilder from '../../builder/QueryBuilder';
 import Bookmark from '../bookmark/bookmark.mode';
 import Video from '../video/video.model';
+import FilterSetting from '../filterSetting/filterSetting.model';
+import { ENUM_LOCATION_TYPE } from '../../utilities/enum';
 const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   const id = userData.profileId;
   if (payload.email) {
@@ -149,6 +151,41 @@ const getAllUser = async (
       ],
     };
     delete query.skill;
+  }
+
+  // for search filter
+  const user = await NormalUser.findById(profileId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  if (user?.locationTypes.length > 0) {
+    if (
+      user?.locationTypes.length > 0 &&
+      user.locationTypes.includes(ENUM_LOCATION_TYPE.CITY)
+    ) {
+      filterQuery.city = { $regex: user.city, $options: 'i' };
+    }
+    if (
+      user?.locationTypes.length > 0 &&
+      user.locationTypes.includes(ENUM_LOCATION_TYPE.STATE)
+    ) {
+      filterQuery.state = { $regex: user.state, $options: 'i' };
+    }
+    if (
+      user?.locationTypes.length > 0 &&
+      user.locationTypes.includes(ENUM_LOCATION_TYPE.COUNTRY)
+    ) {
+      filterQuery.country = {
+        $regex: user.country,
+        $options: 'i',
+      };
+    }
+  }
+  if (user.artistTypes.length > 0) {
+    filterQuery.$or = [
+      { mainSkill: { $in: user.artistTypes } },
+      { additionalSkills: { $in: user.artistTypes } },
+    ];
   }
 
   // Query to fetch users with filtering, pagination, and sorting

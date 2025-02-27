@@ -24,4 +24,6 @@ export interface INormalUser {
   city: string;
   state: string;
   country: string;
+  locationTypes: string[];
+  artistTypes: Types.ObjectId[];
 }

@@ -83,6 +83,15 @@ const NormalUserSchema = new Schema<INormalUser>(
       type: Boolean,
       default: false,
     },
+    locationTypes: {
+      type: [String],
+      default: [],
+    },
+    artistTypes: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Category',
+      default: [],
+    },
   },
   {
     timestamps: true,

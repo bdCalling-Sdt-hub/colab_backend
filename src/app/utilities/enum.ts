@@ -38,3 +38,9 @@ export const ENUM_COLLABORATION_STATUS = {
   UPCOMING: 'upcoming',
   COMPLETED: 'completed',
 };
+
+export const ENUM_LOCATION_TYPE = {
+  CITY: 'city',
+  STATE: 'state',
+  COUNTRY: 'country',
+};

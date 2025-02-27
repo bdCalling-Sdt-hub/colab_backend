@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { ENUM_LOCATION_TYPE } from '../../utilities/enum';
+import mongoose from 'mongoose';
 
 const normalUserValidationSchema = z.object({
   body: z.object({
@@ -44,6 +46,23 @@ const normalUserUpdateValidationSchema = z.object({
       .max(3, 'You can specify up to 3 additional skills only')
       .optional(),
   }),
+  locationTypes: z
+    .array(
+      z.enum([
+        ENUM_LOCATION_TYPE.CITY,
+        ENUM_LOCATION_TYPE.STATE,
+        ENUM_LOCATION_TYPE.COUNTRY,
+      ]),
+    )
+    .optional(),
+
+  artistTypes: z
+    .array(
+      z.string().refine((val) => mongoose.Types.ObjectId.isValid(val), {
+        message: 'Invalid ObjectId',
+      }),
+    )
+    .optional(),
 });
 
 const normalUserValidations = {

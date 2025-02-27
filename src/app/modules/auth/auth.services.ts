@@ -58,6 +58,7 @@ const loginUserIntoDB = async (payload: TLoginUser) => {
   let isMailSkillProvided;
   let isVideosAdded;
   let isPremium;
+  let profileId;
   if (user.role === USER_ROLE.user) {
     const userData = await NormalUser.findOne({ user: user._id });
     if (!userData) {
@@ -69,7 +70,9 @@ const loginUserIntoDB = async (payload: TLoginUser) => {
     isMailSkillProvided = userData?.mainSkill ? true : false;
     isVideosAdded = videos.length >= 3 ? true : false;
     isPremium = userData.isPremium;
+    profileId = userData._id;
   }
+
   return {
     accessToken,
     refreshToken,
@@ -77,6 +80,7 @@ const loginUserIntoDB = async (payload: TLoginUser) => {
     isMailSkillProvided,
     isVideosAdded,
     isPremium,
+    profileId,
   };
 };
 
