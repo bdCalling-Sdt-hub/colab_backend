@@ -50,21 +50,6 @@ const renewSubscription = async (profileId: string) => {
   }
   const userId = normalUser._id.toString();
   const amountInCent = subscriptionPrice * 100;
-  // const paymentIntent = await stripe.paymentIntents.create({
-  //   amount: amountInCent,
-  //   currency: 'usd',
-  //   payment_method_types: ['card'],
-  //   metadata: {
-  //     paymentPurpose: ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION,
-  //     customerName: normalUser.name,
-  //     email: normalUser.email,
-  //     userId,
-  //   },
-  // });
-
-  // return {
-  //   client_secret: paymentIntent.client_secret,
-  // };
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     mode: 'payment',
