@@ -43,6 +43,11 @@ router.post(
   auth(USER_ROLE.user),
   CollaborationController.acceptCollaboration,
 );
+router.get(
+  '/single-collaboration/:id',
+  auth(USER_ROLE.user, USER_ROLE.superAdmin),
+  CollaborationController.getSingleCollaboration,
+);
 
 // mark as completed
 router.post(

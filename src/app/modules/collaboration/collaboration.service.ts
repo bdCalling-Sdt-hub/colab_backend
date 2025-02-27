@@ -44,10 +44,43 @@ const sendCollaborationRequest = async (profileId: string, payload: any) => {
 };
 
 // get my collaboration
-const getMyCollaborations = async (profileId: string) => {
-  const result = await Collaboration.find({
-    $or: [{ sender: profileId }, { receiver: profileId }],
-  })
+const getMyCollaborations = async (
+  profileId: string,
+  query: Record<string, unknown>,
+) => {
+  const collaborationQuery = new QueryBuilder(
+    Collaboration.find({
+      $or: [{ sender: profileId }, { receiver: profileId }],
+    })
+      .populate({
+        path: 'sender',
+        select: 'name profile_image',
+        populate: { path: 'mainSkill', select: 'name' },
+      })
+      .populate({
+        path: 'receiver',
+        select: 'name profile_image',
+        populate: { path: 'mainSkill', select: 'name' },
+      }),
+    query,
+  )
+    .search(['title'])
+    .fields()
+    .filter()
+    .paginate()
+    .sort();
+
+  const result = await collaborationQuery.modelQuery;
+  const meta = await collaborationQuery.countTotal();
+
+  return {
+    meta,
+    result,
+  };
+};
+
+const getSingleCollaboration = async (id: string) => {
+  const result = await Collaboration.findById(id)
     .populate({
       path: 'sender',
       select: 'name profile_image',
@@ -58,7 +91,6 @@ const getMyCollaborations = async (profileId: string) => {
       select: 'name profile_image',
       populate: { path: 'mainSkill', select: 'name' },
     });
-
   return result;
 };
 
@@ -283,6 +315,7 @@ const CollaborationService = {
   updateCollaboration,
   deleteCollaboration,
   acceptCollaboration,
+  getSingleCollaboration,
   markAsComplete,
 };
 

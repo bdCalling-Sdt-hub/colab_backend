@@ -20,8 +20,19 @@ const getConversation = async (
     const matchingUserIds = matchingUsers.map((user) => user._id);
     userSearchFilter = {
       $or: [
-        { sender: { $in: matchingUserIds } },
-        { receiver: { $in: matchingUserIds } },
+        {
+          $and: [
+            { sender: { $in: matchingUserIds } },
+            { sender: { $ne: profileId } },
+          ],
+        },
+
+        {
+          $and: [
+            { receiver: { $in: matchingUserIds } },
+            { receiver: { $ne: profileId } },
+          ],
+        },
       ],
     };
   }

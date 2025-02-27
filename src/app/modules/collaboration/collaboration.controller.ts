@@ -18,6 +18,18 @@ const sendCollaborationRequest = catchAsync(async (req, res) => {
 const getMyCollaborations = catchAsync(async (req, res) => {
   const result = await CollaborationService.getMyCollaborations(
     req.user.profileId,
+    req.query,
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Collaboration retrieved successfully',
+    data: result,
+  });
+});
+const getSingleCollaboration = catchAsync(async (req, res) => {
+  const result = await CollaborationService.getSingleCollaboration(
+    req.params.id,
   );
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -93,6 +105,7 @@ const CollaborationController = {
   deleteCollaboration,
   acceptCollaboration,
   markAsComplete,
+  getSingleCollaboration,
 };
 
 export default CollaborationController;
