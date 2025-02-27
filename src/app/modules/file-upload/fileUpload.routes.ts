@@ -7,13 +7,8 @@ import FileUploadController from './fileUpload.controller';
 const router = express.Router();
 
 router.post(
-  '/upload-images',
-  auth(
-    USER_ROLE.superAdmin,
-    USER_ROLE.admin,
-    USER_ROLE.customer,
-    USER_ROLE.client,
-  ),
+  '/upload-files',
+  auth(USER_ROLE.superAdmin, USER_ROLE.user),
   uploadFile(),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {
@@ -23,5 +18,4 @@ router.post(
   },
   FileUploadController.uploadImages,
 );
-
 export const uploadRoutes = router;

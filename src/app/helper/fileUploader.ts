@@ -14,6 +14,10 @@ export const uploadFile = () => {
         uploadPath = 'uploads/images/category';
       } else if (file.fieldname === 'video') {
         uploadPath = 'uploads/videos';
+      } else if (file.fieldname === 'chat_images') {
+        uploadPath = 'uploads/images/chat_image';
+      } else if (file.fieldname === 'chat_videos') {
+        uploadPath = 'uploads/videos/chat_videos';
       } else if (file.fieldname === 'team_logo') {
         uploadPath = 'uploads/images/team_logo';
       } else if (file.fieldname === 'team_bg_image') {
@@ -76,6 +80,8 @@ export const uploadFile = () => {
       'reward_image',
       'video',
       'thumbnail',
+      'chat_images',
+      'chat_videos',
     ];
 
     if (file.fieldname === undefined) {
@@ -124,6 +130,8 @@ export const uploadFile = () => {
     { name: 'reward_image', maxCount: 1 },
     { name: 'thumbnail', maxCount: 3 },
     { name: 'video', maxCount: 5 },
+    { name: 'chat_videos', maxCount: 2 },
+    { name: 'chat_images', maxCount: 7 },
   ]);
 
   return upload;

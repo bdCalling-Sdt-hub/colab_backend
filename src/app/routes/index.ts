@@ -16,6 +16,7 @@ import { superAdminRoutes } from '../modules/superAdmin/superAdmin.routes';
 import { conversationRoutes } from '../modules/conversation/conversation.routes';
 import { videoRoutes } from '../modules/video/video.routes';
 import { messageRoutes } from '../modules/message/message.routes';
+import { uploadRoutes } from '../modules/file-upload/fileUpload.routes';
 
 const router = Router();
 
@@ -87,6 +88,10 @@ const moduleRoutes = [
   {
     path: '/message',
     router: messageRoutes,
+  },
+  {
+    path: '/',
+    router: uploadRoutes,
   },
 ];
 
