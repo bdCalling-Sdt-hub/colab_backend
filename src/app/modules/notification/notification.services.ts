@@ -5,8 +5,9 @@ import { JwtPayload } from 'jsonwebtoken';
 import { USER_ROLE } from '../user/user.constant';
 import QueryBuilder from '../../builder/QueryBuilder';
 import Notification from './notification.model';
-// import getAdminNotificationCount from '../../helper/getAdminNotification';
-// import getUnseenNotificationCount from '../../helper/getUnseenNotification';
+import { getIO } from '../../socket/socketManager';
+import getAdminNotificationCount from '../../helper/getAdminNotification';
+import getUserNotificationCount from '../../helper/getUserNotificationCount';
 
 const getAllNotificationFromDB = async (
   query: Record<string, any>,
@@ -17,7 +18,7 @@ const getAllNotificationFromDB = async (
       Notification.find({ receiver: USER_ROLE.superAdmin }),
       query,
     )
-      .search(['name'])
+      .search(['title'])
       .filter()
       .sort()
       .paginate()
@@ -30,7 +31,7 @@ const getAllNotificationFromDB = async (
       Notification.find({ receiver: user?.profileId }),
       query,
     )
-      .search(['name'])
+      .search(['title'])
       .filter()
       .sort()
       .paginate()
@@ -42,6 +43,7 @@ const getAllNotificationFromDB = async (
 };
 
 const seeNotification = async (user: JwtPayload) => {
+  const io = getIO();
   let result;
   if (user?.role === USER_ROLE.superAdmin) {
     result = await Notification.updateMany(
@@ -49,9 +51,8 @@ const seeNotification = async (user: JwtPayload) => {
       { seen: true },
       { runValidators: true, new: true },
     );
-    // const adminUnseenNotificationCount = await getAdminNotificationCount();
-    //@ts-ignore
-    // global.io.emit('admin-notifications', adminUnseenNotificationCount);
+    const adminUnseenNotificationCount = await getAdminNotificationCount();
+    io.emit('admin-notifications', adminUnseenNotificationCount);
   }
   if (user?.role !== USER_ROLE.superAdmin) {
     result = await Notification.updateMany(
@@ -60,11 +61,10 @@ const seeNotification = async (user: JwtPayload) => {
       { runValidators: true, new: true },
     );
   }
-  //   const updatedNotificationCount = await getUnseenNotificationCount(
-  //     user?.userId,
-  //   );
-  //@ts-ignore
-  //   global.io.to(user?.userId).emit('notifications', updatedNotificationCount);
+  const updatedNotificationCount = await getUserNotificationCount(
+    user?.profileId,
+  );
+  io.to(user?.userId).emit('notifications', updatedNotificationCount);
   return result;
 };
 
