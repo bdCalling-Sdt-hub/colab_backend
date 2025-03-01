@@ -47,6 +47,8 @@ const getAllCollaborations = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+//
 const updateCollaboration = catchAsync(async (req, res) => {
   const result = await CollaborationService.updateCollaboration(
     req.user.profileId,
@@ -72,15 +74,16 @@ const deleteCollaboration = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const acceptCollaboration = catchAsync(async (req, res) => {
-  const result = await CollaborationService.acceptCollaboration(
+const acceptRejectCollaboration = catchAsync(async (req, res) => {
+  const result = await CollaborationService.acceptRejectCollaboration(
     req.user.profileId,
     req.params.id,
+    req.body.status,
   );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Collaboration accepted successfully',
+    message: `Collaboration ${req.body.status} successfully`,
     data: result,
   });
 });
@@ -103,7 +106,7 @@ const CollaborationController = {
   getAllCollaborations,
   updateCollaboration,
   deleteCollaboration,
-  acceptCollaboration,
+  acceptRejectCollaboration,
   markAsComplete,
   getSingleCollaboration,
 };

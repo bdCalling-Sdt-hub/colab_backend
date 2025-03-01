@@ -198,45 +198,56 @@ const deleteCollaboration = async (
   return result;
 };
 
-const acceptCollaboration = async (
+const acceptRejectCollaboration = async (
   profileId: string,
   collaborationId: string,
+  status: string,
 ) => {
   const collaboration = await Collaboration.findOne({
     _id: collaborationId,
     receiver: profileId,
+    status: ENUM_COLLABORATION_STATUS.PENDING,
   }).populate({ path: 'sender', select: 'name' });
   if (!collaboration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
   }
 
-  const amountInCents = collaboration.price * 100;
-  const sender = collaboration.sender as INormalUser;
-  // Create a checkout session
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    mode: 'payment',
-    line_items: [
-      {
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: `Collaboration with ${sender.name}`,
-          },
-          unit_amount: amountInCents,
-        },
-        quantity: 1,
-      },
-    ],
-    metadata: {
+  if (status == ENUM_COLLABORATION_STATUS.REJECTED) {
+    const result = await Collaboration.findByIdAndUpdate(
       collaborationId,
-      paymentPurpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
-    },
-    success_url: `${config.stripe.collaboration_success_url}?collaborationId=${collaborationId}`,
-    cancel_url: `${config.stripe.collaboration_cancel_url}`,
-  });
+      { status },
+      { new: true, runValidators: true },
+    );
+    return result;
+  } else {
+    const amountInCents = collaboration.price * 100;
+    const sender = collaboration.sender as INormalUser;
+    // Create a checkout session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: `Collaboration with ${sender.name}`,
+            },
+            unit_amount: amountInCents,
+          },
+          quantity: 1,
+        },
+      ],
+      metadata: {
+        collaborationId,
+        paymentPurpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
+      },
+      success_url: `${config.stripe.collaboration_success_url}?collaborationId=${collaborationId}`,
+      cancel_url: `${config.stripe.collaboration_cancel_url}`,
+    });
 
-  return { url: session.url };
+    return { url: session.url };
+  }
 };
 
 // mark as complete
@@ -314,7 +325,7 @@ const CollaborationService = {
   getAllCollaborations,
   updateCollaboration,
   deleteCollaboration,
-  acceptCollaboration,
+  acceptRejectCollaboration,
   getSingleCollaboration,
   markAsComplete,
 };

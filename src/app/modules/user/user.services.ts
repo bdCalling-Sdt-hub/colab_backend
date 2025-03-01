@@ -182,6 +182,13 @@ const deleteUserAccount = async (user: JwtPayload, password: string) => {
     }
   }
 
+  const videos = await Video.find({ user: user.profileId });
+  if (videos.length > 0) {
+    for (const video of videos) {
+      unlinkFile(video.video);
+    }
+  }
+
   if (normalUser.profile_image) {
     if (normalUser.profile_image) {
       unlinkFile(normalUser.profile_image);

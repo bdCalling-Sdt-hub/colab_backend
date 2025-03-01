@@ -74,9 +74,20 @@ const updateCollaborationSchema = z.object({
   }),
 });
 
+const acceptRejectValues = {
+  accept: 'upcoming',
+  rejected: 'rejected',
+};
+const acceepRejectCollaborationValidations = z.object({
+  body: z.object({
+    status: z.enum(Object.values(acceptRejectValues) as [string, ...string[]]),
+  }),
+});
+
 const CollaborationValidations = {
   collaborationSchema,
   updateCollaborationSchema,
+  acceepRejectCollaborationValidations,
 };
 
 export default CollaborationValidations;

@@ -37,6 +37,7 @@ export const ENUM_COLLABORATION_STATUS = {
   PENDING: 'pending',
   UPCOMING: 'upcoming',
   COMPLETED: 'completed',
+  REJECTED: 'rejected',
 };
 
 export const ENUM_LOCATION_TYPE = {

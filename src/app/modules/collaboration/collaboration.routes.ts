@@ -39,9 +39,12 @@ router.delete(
 );
 
 router.post(
-  '/accept-collaboration/:id',
+  '/accept-reject-collaboration/:id',
   auth(USER_ROLE.user),
-  CollaborationController.acceptCollaboration,
+  validateRequest(
+    CollaborationValidations.acceepRejectCollaborationValidations,
+  ),
+  CollaborationController.acceptRejectCollaboration,
 );
 router.get(
   '/single-collaboration/:id',
