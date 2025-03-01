@@ -182,9 +182,7 @@ const changePasswordIntoDB = async (
       "Password and confirm password doesn't match",
     );
   }
-  const user = await User.findOne({
-    $or: [{ email: userData?.email }, { username: userData.username }],
-  });
+  const user = await User.findById(userData.id);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user does not exist');
   }

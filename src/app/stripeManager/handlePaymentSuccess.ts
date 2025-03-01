@@ -50,7 +50,7 @@ const handleSubcriptionPurchaseSuccess = async (
   transactionId: string,
   amount: number,
 ) => {
-  console.log(transactionId);
+  const io = getIO();
   const normalUser = await NormalUser.findById(userId);
   if (!normalUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
@@ -70,7 +70,16 @@ const handleSubcriptionPurchaseSuccess = async (
     email: normalUser?.email,
     type: ENUM_TRANSACTION_TYPE.PURCHASE_SUBSCRIPTION,
     amount: amount,
+    transactionId,
   });
+
+  await Notification.create({
+    title: 'Subscription purchase successful',
+    message: `Congratullations you successfully purchase subscription`,
+    receiver: userId,
+  });
+  const updatedNotificationCount = await getUserNotificationCount(userId);
+  io.to(userId).emit('notifications', updatedNotificationCount);
 };
 
 const handleSubscriptionRenewSuccess = async (
@@ -78,7 +87,7 @@ const handleSubscriptionRenewSuccess = async (
   transactionId: string,
   amount: number,
 ) => {
-  console.log(transactionId);
+  const io = getIO();
   const normalUser = await NormalUser.findById(userId);
   if (!normalUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
@@ -96,7 +105,16 @@ const handleSubscriptionRenewSuccess = async (
     email: normalUser?.email,
     type: ENUM_TRANSACTION_TYPE.RENEW_SUBSCRIPTION,
     amount: amount,
+    transactionId,
   });
+
+  await Notification.create({
+    title: 'Subscription renew successful',
+    message: `Congratullations you successfully renew subscription`,
+    receiver: userId,
+  });
+  const updatedNotificationCount = await getUserNotificationCount(userId);
+  io.to(userId).emit('notifications', updatedNotificationCount);
 };
 
 const handleCollabratePaymentSuccess = async (
