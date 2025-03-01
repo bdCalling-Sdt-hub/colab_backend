@@ -11,6 +11,9 @@ import {
 import Collaboration from '../modules/collaboration/collaboration.model';
 import Transaction from '../modules/transaction/transaction.model';
 import { INormalUser } from '../modules/normalUser/normalUser.interface';
+import { getIO } from '../socket/socketManager';
+import Notification from '../modules/notification/notification.model';
+import getUserNotificationCount from '../helper/getUserNotificationCount';
 
 const handlePaymentSuccess = async (
   metaData: any,
@@ -101,10 +104,13 @@ const handleCollabratePaymentSuccess = async (
   transactionId: string,
   amount: number,
 ) => {
-  const collaboration = await Collaboration.findById(collaborationId).populate({
-    path: 'receiver',
-    select: 'email',
-  });
+  const io = getIO();
+  const collaboration = await Collaboration.findById(collaborationId)
+    .populate({
+      path: 'receiver',
+      select: 'email name',
+    })
+    .populate({ path: 'sender', select: 'name' });
   if (!collaboration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
   }
@@ -119,7 +125,21 @@ const handleCollabratePaymentSuccess = async (
     email: receiver?.email,
     type: ENUM_TRANSACTION_TYPE.COLLABORATION,
     amount: amount,
+    transactionId,
   });
+
+  await Notification.create({
+    title: 'Collaboration request accepted',
+    message: `Congratullations your collaboration request accepted by ${collaboration.receiver.name}`,
+    receiver: collaboration.sender._id,
+  });
+  const updatedNotificationCount = await getUserNotificationCount(
+    collaboration.sender._id,
+  );
+  io.to(collaboration.sender._id).emit(
+    'notifications',
+    updatedNotificationCount,
+  );
 };
 
 export default handlePaymentSuccess;

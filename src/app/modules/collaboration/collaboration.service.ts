@@ -13,10 +13,15 @@ import config from '../../config';
 import { INormalUser } from '../normalUser/normalUser.interface';
 import isAccountReady from '../../helper/isAccountReady';
 import { adminFeeParcent } from '../../constant';
+import Notification from '../notification/notification.model';
+import { getIO } from '../../socket/socketManager';
+import getUserNotificationCount from '../../helper/getUserNotificationCount';
 const stripe = new Stripe(config.stripe.stripe_secret_key as string);
 // send collaboraton --------------
 const sendCollaborationRequest = async (profileId: string, payload: any) => {
+  const io = getIO();
   const receiver = await NormalUser.findById(payload.receiver);
+  const sender = await NormalUser.findById(profileId);
   if (!receiver) {
     throw new AppError(httpStatus.NOT_FOUND, 'Receiver not found');
   }
@@ -40,6 +45,17 @@ const sendCollaborationRequest = async (profileId: string, payload: any) => {
     startDateTime,
     endDateTime,
   });
+
+  await Notification.create({
+    title: 'New collaboration request received',
+    message: `New collaboratin request received from ${sender?.name}`,
+    receiver: payload.receiver,
+  });
+  const updatedNotificationCount = await getUserNotificationCount(
+    payload.receiver,
+  );
+  io.to(payload.receiver).emit('notifications', updatedNotificationCount);
+
   return result;
 };
 
@@ -203,11 +219,14 @@ const acceptRejectCollaboration = async (
   collaborationId: string,
   status: string,
 ) => {
+  const io = getIO();
   const collaboration = await Collaboration.findOne({
     _id: collaborationId,
     receiver: profileId,
     status: ENUM_COLLABORATION_STATUS.PENDING,
-  }).populate({ path: 'sender', select: 'name' });
+  })
+    .populate({ path: 'sender', select: 'name' })
+    .populate({ path: 'receiver', select: 'name' });
   if (!collaboration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
   }
@@ -217,6 +236,18 @@ const acceptRejectCollaboration = async (
       collaborationId,
       { status },
       { new: true, runValidators: true },
+    );
+    await Notification.create({
+      title: 'Collaboration request rejected',
+      message: `Your collaboration request rejected by ${collaboration.receiver.name}`,
+      receiver: collaboration.sender._id,
+    });
+    const updatedNotificationCount = await getUserNotificationCount(
+      collaboration.sender._id,
+    );
+    io.to(collaboration.sender._id).emit(
+      'notifications',
+      updatedNotificationCount,
     );
     return result;
   } else {

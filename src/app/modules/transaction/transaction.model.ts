@@ -22,6 +22,9 @@ const TransactionSchema = new Schema(
       required: true,
       min: 0,
     },
+    transactionId: {
+      type: String,
+    },
   },
   {
     timestamps: true,
