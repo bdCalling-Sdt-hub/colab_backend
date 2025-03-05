@@ -38,7 +38,7 @@ router.patch(
   validateRequest(userValidations.changeUserStatus),
   userControllers.changeUserStatus,
 );
-router.delete(
+router.post(
   '/delete-account',
   auth(USER_ROLE.user),
   validateRequest(userValidations.deleteUserAccountValidationSchema),

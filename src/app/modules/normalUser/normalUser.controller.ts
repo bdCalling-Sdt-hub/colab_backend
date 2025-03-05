@@ -75,12 +75,23 @@ const getSingleUser = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUserForAdmin = catchAsync(async (req, res) => {
+  const result = await NormalUserServices.getAllUserForAdmin(req.query);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User retrieved successfully',
+    data: result,
+  });
+});
+
 const NormalUserController = {
   updateUserProfile,
   addVideos,
   increseTotalScroll,
   getAllUser,
   getSingleUser,
+  getAllUserForAdmin,
 };
 
 export default NormalUserController;

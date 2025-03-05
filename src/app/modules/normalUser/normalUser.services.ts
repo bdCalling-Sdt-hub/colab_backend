@@ -248,6 +248,28 @@ const getAllUser = async (
   };
 };
 
+const getAllUserForAdmin = async (query: Record<string, unknown>) => {
+  const userQuery = new QueryBuilder(
+    NormalUser.find()
+      .populate({ path: 'mainSkill', select: 'name' })
+      .populate({ path: 'additionalSkills', select: 'name' })
+      .populate({ path: 'user', select: 'status' }),
+    query,
+  )
+    .search(['name'])
+    .fields()
+    .filter()
+    .paginate()
+    .sort();
+
+  const result = await userQuery.modelQuery;
+  const meta = await userQuery.countTotal();
+  return {
+    meta,
+    result,
+  };
+};
+
 // get single user
 const getSingleUser = async (id: string) => {
   const result = await NormalUser.findById(id)
@@ -280,6 +302,7 @@ const NormalUserServices = {
   increseTotalScroll,
   getAllUser,
   getSingleUser,
+  getAllUserForAdmin,
 };
 
 export default NormalUserServices;

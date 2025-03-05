@@ -53,4 +53,11 @@ router.get(
   auth(USER_ROLE.superAdmin, USER_ROLE.user),
   NormalUserController.getSingleUser,
 );
+
+router.get(
+  '/get-all-user-for-admin',
+  auth(USER_ROLE.superAdmin),
+  NormalUserController.getAllUserForAdmin,
+);
+
 export const normalUserRoutes = router;
