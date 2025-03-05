@@ -5,8 +5,7 @@ const getAllTransaction = async (query: Record<string, unknown>) => {
   const transactionQuery = new QueryBuilder(
     Transaction.find().populate({
       path: 'user',
-      select: 'name profile_image mainSkill',
-      populate: { path: 'mainSkill', select: 'name' },
+      select: 'name profile_image',
     }),
     query,
   )

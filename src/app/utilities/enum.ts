@@ -9,7 +9,7 @@ export const ENUM_USER_STATUS = {
 };
 
 export const ENUM_TRANSACTION_TYPE = {
-  PURCHASE_SUBSCRIPTION: 'Purchase Subcription',
+  PURCHASE_SUBSCRIPTION: 'Purchase Subscription',
   RENEW_SUBSCRIPTION: 'Review Subscription',
   COLLABORATION: 'Collaboration',
   TRANSFER: 'Transfer',
