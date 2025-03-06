@@ -148,7 +148,7 @@ const handleCollabratePaymentSuccess = async (
 
   await Notification.create({
     title: 'Collaboration request accepted',
-    message: `Congratullations your collaboration request accepted by ${collaboration.receiver.name}`,
+    message: `Congratullations your collaboration request accepted by ${receiver.name}`,
     receiver: collaboration.sender._id,
   });
   const updatedNotificationCount = await getUserNotificationCount(
