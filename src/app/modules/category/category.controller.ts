@@ -42,7 +42,7 @@ const updateCategory = catchAsync(async (req, res) => {
 
   // Check if files and store_image exist, and process multiple images
   if (files && typeof files === 'object' && 'category_image' in files) {
-    req.body.image = files['category_image'][0].path;
+    req.body.category_image = files['category_image'][0].path;
   }
 
   const result = await categoryService.updateCategoryIntoDB(

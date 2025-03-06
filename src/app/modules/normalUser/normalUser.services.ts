@@ -10,7 +10,6 @@ import cron from 'node-cron';
 import QueryBuilder from '../../builder/QueryBuilder';
 import Bookmark from '../bookmark/bookmark.mode';
 import Video from '../video/video.model';
-import FilterSetting from '../filterSetting/filterSetting.model';
 import { ENUM_LOCATION_TYPE } from '../../utilities/enum';
 const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   const id = userData.profileId;

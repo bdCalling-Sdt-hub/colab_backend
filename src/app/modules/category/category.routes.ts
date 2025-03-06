@@ -25,6 +25,12 @@ router.patch(
   '/update-category/:id',
   auth(USER_ROLE.superAdmin),
   uploadFile(),
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.body.data) {
+      req.body = JSON.parse(req.body.data);
+    }
+    next();
+  },
   validateRequest(categoryValidation.updateCategoryValidationSchema),
   categoryController.updateCategory,
 );
