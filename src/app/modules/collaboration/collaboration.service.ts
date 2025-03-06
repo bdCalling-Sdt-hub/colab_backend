@@ -283,6 +283,7 @@ const acceptRejectCollaboration = async (
 
 // mark as complete
 const markAsComplete = async (profileId: string, collaborationId: string) => {
+  const io = getIO();
   const collaboration = await Collaboration.findOne({
     _id: collaborationId,
     receiver: profileId,
@@ -343,6 +344,19 @@ const markAsComplete = async (profileId: string, collaborationId: string) => {
       collaborationId,
       { status: ENUM_COLLABORATION_STATUS.COMPLETED },
       { new: true, runValidators: true },
+    );
+
+    await Notification.create({
+      title: 'Collaboration completed',
+      message: `Congratullations your collaboration is completed , you got $${collaboration.price}`,
+      receiver: collaboration.sender,
+    });
+    const updatedNotificationCount = await getUserNotificationCount(
+      collaboration.sender.toString(),
+    );
+    io.to(collaboration.sender.toString()).emit(
+      'notifications',
+      updatedNotificationCount,
     );
   } catch (error) {
     console.error('Error during transfer or payout:', error);
