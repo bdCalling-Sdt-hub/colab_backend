@@ -38,6 +38,7 @@ const getMessages = async (
   return {
     meta,
     result: {
+      conversationId: conversation._id,
       userData,
       messages: result,
     },

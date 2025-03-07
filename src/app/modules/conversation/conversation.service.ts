@@ -62,7 +62,6 @@ const getConversation = async (
         msgByUserId: { $ne: profileId },
         seen: false,
       });
-
       const otherUser =
         conv.sender._id.toString() == profileId ? conv.receiver : conv.sender;
       return {

@@ -3,7 +3,6 @@ import { Server as IOServer, Socket } from 'socket.io';
 import NormalUser from '../modules/normalUser/normalUser.model';
 import Conversation from '../modules/conversation/conversation.model';
 import Message from '../modules/message/message.model';
-import { getConversation } from '../helper/gerConversation';
 import { getSingleConversation2 } from '../helper/getSingleConversation2';
 
 const handleChat2 = async (
@@ -58,8 +57,8 @@ const handleChat2 = async (
     }
     const messageData = {
       text: data.text,
-      imageUrl: data.imageUrl || '',
-      videoUrl: data.videoUrl || '',
+      imageUrl: data.imageUrl || [],
+      videoUrl: data.videoUrl || [],
       msgByUserId: data?.msgByUserId,
       conversationId: conversation?._id,
     };
@@ -90,21 +89,21 @@ const handleChat2 = async (
   });
 
   // send------------------------
-  socket.on('seen', async (msgByUserId) => {
-    const conversation = await Conversation.findOne({
-      $or: [
-        { sender: currentUserId, receiver: msgByUserId },
-        { sender: msgByUserId, receiver: currentUserId },
-      ],
-    });
+  socket.on('seen', async ({ conversationId, msgByUserId }) => {
     await Message.updateMany(
-      { conversationId: conversation?._id, msgByUserId: msgByUserId },
+      { conversationId: conversationId, msgByUserId: msgByUserId },
       { $set: { seen: true } },
     );
 
     //send conversation --------------
-    const conversationSender = await getConversation(currentUserId as string);
-    const conversationReceiver = await getConversation(msgByUserId);
+    const conversationSender = await getSingleConversation2(
+      currentUserId,
+      msgByUserId,
+    );
+    const conversationReceiver = await getSingleConversation2(
+      msgByUserId,
+      currentUserId,
+    );
 
     io.to(currentUserId as string).emit('conversation', conversationSender);
     io.to(msgByUserId).emit('conversation', conversationReceiver);
