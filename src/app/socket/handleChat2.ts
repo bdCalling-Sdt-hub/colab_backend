@@ -24,7 +24,6 @@ const handleChat2 = async (
       };
       socket.emit('message-user', payload);
     } else {
-      console.log('User not found');
       socket.emit('socket-error', {
         errorMessage: 'Current user is not exits',
       });
