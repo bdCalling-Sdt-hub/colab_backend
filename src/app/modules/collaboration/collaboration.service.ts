@@ -136,8 +136,8 @@ const getAllCollaborations = async (query: Record<string, unknown>) => {
   const meta = await collaborationQuery.countTotal();
 
   return {
-    result,
     meta,
+    result,
   };
 };
 
@@ -230,6 +230,7 @@ const acceptRejectCollaboration = async (
   if (!collaboration) {
     throw new AppError(httpStatus.NOT_FOUND, 'Collaboration not found');
   }
+  const receiver = collaboration.receiver as INormalUser;
 
   if (status == ENUM_COLLABORATION_STATUS.REJECTED) {
     const result = await Collaboration.findByIdAndUpdate(
@@ -239,7 +240,7 @@ const acceptRejectCollaboration = async (
     );
     await Notification.create({
       title: 'Collaboration request rejected',
-      message: `Your collaboration request rejected by ${collaboration.receiver.name}`,
+      message: `Your collaboration request rejected by ${receiver.name}`,
       receiver: collaboration.sender._id,
     });
     const updatedNotificationCount = await getUserNotificationCount(

@@ -12,6 +12,8 @@ import notFound from './app/middlewares/notFound';
 const app: Application = express();
 import sendContactUsEmail from './app/helper/sendContactUsEmail';
 import handleWebhook from './app/stripeManager/webhook';
+import Category from './app/modules/category/category.model';
+import Collaboration from './app/modules/collaboration/collaboration.model';
 // web hook
 app.post(
   '/colab-app/webhook',
@@ -41,6 +43,10 @@ app.post('/contact-us', sendContactUsEmail);
 app.get('/nice', async (req, res) => {
   res.send({ message: 'nice to meet you' });
 });
+// app.get('/all-categories', async (req, res) => {
+//   const result = await Category.find();
+//   res.send({ data: result });
+// });
 
 // global error handler
 app.use(globalErrorHandler);

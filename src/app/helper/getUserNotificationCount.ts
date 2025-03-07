@@ -5,7 +5,10 @@ const getUserNotificationCount = async (receiver: string) => {
     seen: false,
     receiver: receiver,
   });
-  return unseenCount;
+  const latestNotification = await Notification.findOne({ receiver: receiver })
+    .sort({ createdAt: -1 })
+    .lean();
+  return { unseenCount, latestNotification };
 };
 
 export default getUserNotificationCount;

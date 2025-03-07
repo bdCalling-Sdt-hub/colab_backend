@@ -6,8 +6,12 @@ const getAdminNotificationCount = async () => {
     seen: false,
     receiver: USER_ROLE.superAdmin,
   });
-
-  return unseenCount;
+  const latestNotification = await Notification.findOne({
+    receiver: USER_ROLE.superAdmin,
+  })
+    .sort({ createdAt: -1 })
+    .lean();
+  return { unseenCount, latestNotification };
 };
 
 export default getAdminNotificationCount;
