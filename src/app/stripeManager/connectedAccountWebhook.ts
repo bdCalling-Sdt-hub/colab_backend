@@ -5,7 +5,7 @@ import { Request, Response } from 'express';
 import updateStripeConnectedAccountStatus from './updateStripeAccountConnectedStatus';
 
 const stripe = new Stripe(config.stripe.stripe_secret_key as string);
-const handleWebhook = async (req: Request, res: Response) => {
+const handleConnectedAccountWebhook = async (req: Request, res: Response) => {
   const endpointSecret = config.stripe.connected_account_webhook_secret;
   const sig = req.headers['stripe-signature'];
 
@@ -47,4 +47,4 @@ const handleWebhook = async (req: Request, res: Response) => {
   }
 };
 
-export default handleWebhook;
+export default handleConnectedAccountWebhook;
