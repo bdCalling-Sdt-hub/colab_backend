@@ -269,6 +269,7 @@ const acceptRejectCollaboration = async (
   } else {
     const amountInCents = collaboration.price * 100;
     const sender = collaboration.sender as INormalUser;
+    const receiver = collaboration.receiver as INormalUser;
     // Create a checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -289,7 +290,7 @@ const acceptRejectCollaboration = async (
         collaborationId,
         paymentPurpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
       },
-      customer_email: 'nice@gmail.com',
+      customer_email: receiver.email,
       success_url: `${config.stripe.collaboration_success_url}?collaborationId=${collaborationId}`,
       cancel_url: `${config.stripe.collaboration_cancel_url}`,
     });

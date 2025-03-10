@@ -15,30 +15,66 @@ const purchaseSubscription = async (profileId: string) => {
   }
   const amountInCent = subscriptionPrice * 100;
   const userId = normalUser._id.toString();
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    mode: 'payment',
-    line_items: [
-      {
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: `Purchase Subscription`,
-          },
-          unit_amount: amountInCent,
-        },
-        quantity: 1,
-      },
-    ],
-    metadata: {
-      userId,
-      paymentPurpose: ENUM_PAYMENT_PURPOSE.PURCHASE_SUBSCRIPTION,
-    },
-    success_url: `${config.stripe.subscription_payment_success_url}?collaborationId=${userId}`,
-    cancel_url: `${config.stripe.subscription_payment_cancel_url}`,
-  });
 
-  return { url: session.url };
+  if (
+    normalUser?.subscriptionExpiryDate &&
+    new Date(normalUser?.subscriptionExpiryDate).getTime() > Date.now()
+  ) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'You already have subscription');
+  }
+
+  if (normalUser?.subscriptionPurchaseDate) {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: `Renew Subscription`,
+            },
+            unit_amount: amountInCent,
+          },
+          quantity: 1,
+        },
+      ],
+      metadata: {
+        userId,
+        paymentPurpose: ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION,
+      },
+      customer_email: normalUser?.email,
+      success_url: `${config.stripe.subscription_renew_success_url}?collaborationId=${userId}`,
+      cancel_url: `${config.stripe.subscription_renew_cancel_url}`,
+    });
+    return { url: session.url };
+  } else {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: `Purchase Subscription`,
+            },
+            unit_amount: amountInCent,
+          },
+          quantity: 1,
+        },
+      ],
+      metadata: {
+        userId,
+        paymentPurpose: ENUM_PAYMENT_PURPOSE.PURCHASE_SUBSCRIPTION,
+      },
+      customer_email: normalUser?.email,
+      success_url: `${config.stripe.subscription_payment_success_url}?collaborationId=${userId}`,
+      cancel_url: `${config.stripe.subscription_payment_cancel_url}`,
+    });
+
+    return { url: session.url };
+  }
 };
 
 // renew subscription----------------------
