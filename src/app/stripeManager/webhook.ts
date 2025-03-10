@@ -7,8 +7,7 @@ import updateStripeConnectedAccountStatus from './updateStripeAccountConnectedSt
 
 const stripe = new Stripe(config.stripe.stripe_secret_key as string);
 const handleWebhook = async (req: Request, res: Response) => {
-  const endpointSecret =
-    'whsec_f05875eb42dd8051fbc20bcdb538e22c499ecd114bde7eea65bb0602b1730562';
+  const endpointSecret = config.stripe.webhook_endpoint_secret;
   const sig = req.headers['stripe-signature'];
 
   try {
@@ -16,23 +15,11 @@ const handleWebhook = async (req: Request, res: Response) => {
     const event = stripe.webhooks.constructEvent(
       req.body,
       sig as string,
-      endpointSecret,
+      endpointSecret as string,
     );
 
     // Handle different event types
     switch (event.type) {
-      // case 'payment_intent.succeeded': {
-      //   const paymentIntent = event.data.object as Stripe.PaymentIntent;
-      //   console.log(paymentIntent.metadata);
-      //   // const { userId, paymentPurpose } = paymentIntent.metadata;
-
-      //   console.log(`Payment successful for user ${paymentIntent.metadata}}`);
-      //   await handlePaymentSuccess(paymentIntent.metadata);
-      //   // Update subscription status in your database
-      //   // E.g., Activate the subscription for the user
-
-      //   break;
-      // }
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
 
