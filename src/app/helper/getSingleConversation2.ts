@@ -33,7 +33,7 @@ export const getSingleConversation2 = async (
   return {
     _id: conversation._id,
     userData: {
-      id: otherUser._id,
+      _id: otherUser._id,
       name: otherUser?.name,
       email: otherUser.email,
       profileImage: otherUser?.profile_image,

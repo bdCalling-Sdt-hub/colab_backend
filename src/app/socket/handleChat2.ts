@@ -82,7 +82,6 @@ const handleChat2 = async (
       data?.receiver,
       data?.sender,
     );
-
     io.to(data?.sender).emit('conversation', conversationSender);
     io.to(data?.receiver).emit('conversation', conversationReceiver);
   });

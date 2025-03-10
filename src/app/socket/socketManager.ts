@@ -20,11 +20,16 @@ const initializeSocket = (server: HTTPServer) => {
     });
     // online user
     const onlineUser = new Set();
+    console.log(onlineUser);
+    io.on('ping', (data) => {
+      io.emit('pong', data);
+    });
     io.on('connection', async (socket: Socket) => {
       const userId = socket.handshake.query.id as string;
       if (!userId) {
         return;
       }
+
       const currentUser = await NormalUser.findById(userId);
       if (!currentUser) {
         return;

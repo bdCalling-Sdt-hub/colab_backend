@@ -79,7 +79,7 @@ const handleSubcriptionPurchaseSuccess = async (
     receiver: userId,
   });
   const updatedNotificationCount = await getUserNotificationCount(userId);
-  io.to(userId).emit('notifications', updatedNotificationCount);
+  io.to(userId.toString()).emit('notifications', updatedNotificationCount);
 };
 
 const handleSubscriptionRenewSuccess = async (
@@ -114,7 +114,7 @@ const handleSubscriptionRenewSuccess = async (
     receiver: userId,
   });
   const updatedNotificationCount = await getUserNotificationCount(userId);
-  io.to(userId).emit('notifications', updatedNotificationCount);
+  io.to(userId.toString()).emit('notifications', updatedNotificationCount);
 };
 
 const handleCollabratePaymentSuccess = async (
@@ -154,7 +154,7 @@ const handleCollabratePaymentSuccess = async (
   const updatedNotificationCount = await getUserNotificationCount(
     collaboration.sender._id,
   );
-  io.to(collaboration.sender._id).emit(
+  io.to(collaboration.sender._id.toString()).emit(
     'notifications',
     updatedNotificationCount,
   );

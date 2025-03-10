@@ -25,13 +25,25 @@ const sendCollaborationRequest = async (profileId: string, payload: any) => {
   if (!receiver) {
     throw new AppError(httpStatus.NOT_FOUND, 'Receiver not found');
   }
+  if (!sender) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Sender not found');
+  }
+
   // TODO: need to update that when connected account work is completed
-  // if (!receiver.stripeAccountId || !receiver.isStripeConnected) {
-  //   throw new AppError(
-  //     httpStatus.UNAVAILABLE_FOR_LEGAL_REASONS,
-  //     "This persion don't provide his/her payment info , please try again leter",
-  //   );
-  // }
+  if (!sender.stripeAccountId || !sender.isStripeConnected) {
+    throw new AppError(
+      httpStatus.UNAVAILABLE_FOR_LEGAL_REASONS,
+      'Please add payment method before send collaboration request',
+    );
+  }
+
+  const isReady = await isAccountReady(sender?.stripeAccountId as string);
+  if (!isReady) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Your account is not ready for receive payment. Please update payment method before send collaboration request',
+    );
+  }
 
   const startDateTime = new Date(payload.startDate);
   const [startHours, startMinutes] = payload.startTime.split(':');
@@ -54,7 +66,10 @@ const sendCollaborationRequest = async (profileId: string, payload: any) => {
   const updatedNotificationCount = await getUserNotificationCount(
     payload.receiver,
   );
-  io.to(payload.receiver).emit('notifications', updatedNotificationCount);
+  io.to(payload.receiver.toString()).emit(
+    'notifications',
+    updatedNotificationCount,
+  );
 
   return result;
 };
@@ -246,7 +261,7 @@ const acceptRejectCollaboration = async (
     const updatedNotificationCount = await getUserNotificationCount(
       collaboration.sender._id,
     );
-    io.to(collaboration.sender._id).emit(
+    io.to(collaboration.sender._id.toString()).emit(
       'notifications',
       updatedNotificationCount,
     );
@@ -274,6 +289,7 @@ const acceptRejectCollaboration = async (
         collaborationId,
         paymentPurpose: ENUM_PAYMENT_PURPOSE.COLLABRATE_PAYMENT,
       },
+      customer_email: 'nice@gmail.com',
       success_url: `${config.stripe.collaboration_success_url}?collaborationId=${collaborationId}`,
       cancel_url: `${config.stripe.collaboration_cancel_url}`,
     });

@@ -295,6 +295,14 @@ cron.schedule('59 23 * * *', async () => {
   console.log('result for reset total scroll', result);
 });
 
+cron.schedule('59 23 * * *', async () => {
+  const result = await NormalUser.updateMany(
+    { isPremium: true, subscriptionExpiryDate: { $lt: new Date() } },
+    { isPremium: false },
+  );
+  console.log('result for reset subscription expire', result);
+});
+
 const NormalUserServices = {
   updateUserProfile,
   addVideos,

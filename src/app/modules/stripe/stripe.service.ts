@@ -15,18 +15,18 @@ const createConnectedAccountAndOnboardingLink = async (
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  if (normalUser?.isStripeConnected) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      'You already added bank information',
-    );
-  }
+  // if (normalUser?.isStripeConnected) {
+  //   throw new AppError(
+  //     httpStatus.BAD_REQUEST,
+  //     'You already added bank information',
+  //   );
+  // }
 
   if (normalUser.stripeAccountId) {
     const onboardingLink = await stripe.accountLinks.create({
       account: normalUser.stripeAccountId,
       refresh_url: `${config.stripe.onboarding_refresh_url}?accountId=${normalUser.stripeAccountId}`,
-      return_url: 'http://localhost:3000/account-created',
+      return_url: config.stripe.onboarding_return_url,
       type: 'account_onboarding',
     });
     return onboardingLink.url;
@@ -38,8 +38,16 @@ const createConnectedAccountAndOnboardingLink = async (
     email: normalUser.email,
     country: 'US',
     capabilities: {
-      card_payments: { requested: true },
+      // card_payments: { requested: true },
       transfers: { requested: true },
+    },
+    business_type: 'individual',
+    settings: {
+      payouts: {
+        schedule: {
+          interval: 'manual',
+        },
+      },
     },
   });
 
@@ -62,7 +70,7 @@ const createConnectedAccountAndOnboardingLink = async (
   const onboardingLink = await stripe.accountLinks.create({
     account: account.id,
     refresh_url: `${config.stripe.onboarding_refresh_url}?accountId=${account?.id}`,
-    return_url: 'http://localhost:3000/account-created',
+    return_url: config.stripe.onboarding_return_url,
     type: 'account_onboarding',
   });
   return onboardingLink.url;
