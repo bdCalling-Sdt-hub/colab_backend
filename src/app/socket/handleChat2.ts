@@ -70,8 +70,14 @@ const handleChat2 = async (
       },
     );
     // send to the frontend only new message data ---------------
-    io.to(data?.sender).emit('message', saveMessage);
-    io.to(data?.receiver).emit('message', saveMessage);
+    io.to(data?.sender.toString()).emit(
+      `message-${data?.receiver}`,
+      saveMessage,
+    );
+    io.to(data?.receiver.toString()).emit(
+      `message-${data?.sender}`,
+      saveMessage,
+    );
 
     //send conversation
     const conversationSender = await getSingleConversation2(

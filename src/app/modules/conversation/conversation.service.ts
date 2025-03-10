@@ -65,12 +65,12 @@ const getConversation = async (
       const otherUser =
         conv.sender._id.toString() == profileId ? conv.receiver : conv.sender;
       return {
-        _id: conv._id,
+        _id: conv?._id,
         userData: {
-          _id: otherUser._id,
-          name: otherUser.name,
-          profileImage: otherUser.profile_image,
-          email: otherUser.email,
+          _id: otherUser?._id,
+          name: otherUser?.name,
+          profileImage: otherUser?.profile_image,
+          email: otherUser?.email,
         },
         unseenMsg: countUnseenMessage,
         lastMsg: conv.lastMessage,
