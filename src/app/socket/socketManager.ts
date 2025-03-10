@@ -15,6 +15,7 @@ const initializeSocket = (server: HTTPServer) => {
           'http://localhost:3000',
           'http://192.168.10.25:7585',
           'http://10.0.60.137:3001',
+          'http://143.110.241.146:4175',
         ],
       },
     });
