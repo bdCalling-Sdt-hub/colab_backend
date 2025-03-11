@@ -77,44 +77,8 @@ const purchaseSubscription = async (profileId: string) => {
   }
 };
 
-// renew subscription----------------------
-
-const renewSubscription = async (profileId: string) => {
-  const normalUser = await NormalUser.findById(profileId);
-  if (!normalUser) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
-  }
-  const userId = normalUser._id.toString();
-  const amountInCent = subscriptionPrice * 100;
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    mode: 'payment',
-    line_items: [
-      {
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: `Renew Subscription`,
-          },
-          unit_amount: amountInCent,
-        },
-        quantity: 1,
-      },
-    ],
-    metadata: {
-      userId,
-      paymentPurpose: ENUM_PAYMENT_PURPOSE.RENEW_SUBSCRIPTION,
-    },
-    success_url: `${config.stripe.subscription_renew_success_url}?collaborationId=${userId}`,
-    cancel_url: `${config.stripe.subscription_renew_cancel_url}`,
-  });
-
-  return { url: session.url };
-};
-
 const SubscriptionService = {
   purchaseSubscription,
-  renewSubscription,
 };
 
 export default SubscriptionService;

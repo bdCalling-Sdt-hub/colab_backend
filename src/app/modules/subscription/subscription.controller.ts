@@ -15,21 +15,8 @@ const purchaseSubscription = catchAsync(async (req, res) => {
   });
 });
 
-const renewSubscription = catchAsync(async (req, res) => {
-  const result = await SubscriptionService.renewSubscription(
-    req.user.profileId,
-  );
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Subscription renew successfully',
-    data: result,
-  });
-});
-
 const SubscriptionController = {
   purchaseSubscription,
-  renewSubscription,
 };
 
 export default SubscriptionController;

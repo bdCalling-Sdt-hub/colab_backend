@@ -9,9 +9,5 @@ router.post(
   auth(USER_ROLE.user),
   SubscriptionController.purchaseSubscription,
 );
-router.post(
-  '/renew-subscription',
-  auth(USER_ROLE.user),
-  SubscriptionController.renewSubscription,
-);
+
 export const subscriptionRoutes = router;
