@@ -1,2 +1,2 @@
 export const subscriptionPrice = 100;
-export const adminFeeParcent = 20;
+export const adminFeeParcent = 7;
