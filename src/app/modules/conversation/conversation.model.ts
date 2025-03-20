@@ -13,12 +13,6 @@ const conversationSchema = new Schema<IConversation>(
       required: true,
       ref: 'NormalUser',
     },
-    // messages: [
-    //   {
-    //     type: mongoose.Schema.ObjectId,
-    //     ref: 'Message',
-    //   },
-    // ],
     lastMessage: {
       type: Schema.Types.ObjectId,
       ref: 'Message',

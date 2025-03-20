@@ -1,3 +1,4 @@
+import { ENUM_TRANSACTION_TYPE } from '../../utilities/enum';
 import Category from '../category/category.model';
 import NormalUser from '../normalUser/normalUser.model';
 import Transaction from '../transaction/transaction.model';
@@ -8,13 +9,37 @@ const getDashboardMetaData = async () => {
   const totalSubscriber = await NormalUser.countDocuments({ isPremium: true });
   const total = await Transaction.aggregate([
     {
+      $project: {
+        adjustedAmount: {
+          $cond: {
+            if: {
+              $or: [
+                { $eq: ['$type', ENUM_TRANSACTION_TYPE.PURCHASE_SUBSCRIPTION] },
+                { $eq: ['$type', ENUM_TRANSACTION_TYPE.RENEW_SUBSCRIPTION] },
+              ],
+            },
+            then: '$amount', // Full amount for subscriptions
+            else: {
+              $cond: {
+                if: { $eq: ['$type', ENUM_TRANSACTION_TYPE.COLLABORATION] },
+                then: { $multiply: ['$amount', 0.07] }, // 7% for collaborations
+                else: 0, // Ignore other transaction types
+              },
+            },
+          },
+        },
+      },
+    },
+    {
       $group: {
         _id: null,
-        total: { $sum: '$amount' },
+        totalEarning: { $sum: '$adjustedAmount' },
       },
     },
   ]);
-  const totalEarning = total.length > 0 ? total[0].total : 0;
+
+  const totalEarning = total.length > 0 ? total[0].totalEarning : 0;
+
   return { totalUser, totalSubscriber, totalEarning, totalCategory };
 };
 
