@@ -4,7 +4,8 @@ import { USER_ROLE } from '../user/user.constant';
 import validateRequest from '../../middlewares/validateRequest';
 import categoryValidation from './category.validation';
 import categoryController from './category.controller';
-import { uploadFile } from '../../helper/fileUploader';
+import { uploadFile } from '../../aws/multer-s3-uploader';
+// import { uploadFile } from '../../helper/fileUploader';
 
 const router = express.Router();
 

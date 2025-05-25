@@ -3,6 +3,7 @@ import AppError from '../../error/appError';
 import mongoose from 'mongoose';
 import { ICategory } from './category.interface';
 import Category from './category.model';
+import { deleteFileFromS3 } from '../../aws/deleteFromS3';
 
 // create category into db
 const createCategoryIntoDB = async (payload: ICategory) => {
@@ -13,10 +14,14 @@ const updateCategoryIntoDB = async (
   id: string,
   payload: Partial<ICategory>,
 ) => {
+  const category = await Category.findById(id).select('category_image');
   const result = await Category.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
   });
+  if (payload.category_image && category?.category_image) {
+    deleteFileFromS3(category.category_image);
+  }
   return result;
 };
 
@@ -54,6 +59,9 @@ const deleteCategoryFromDB = async (categoryId: string) => {
       );
     }
 
+    if (category.category_image) {
+      deleteFileFromS3(category.category_image);
+    }
     await session.commitTransaction();
     session.endSession();
 

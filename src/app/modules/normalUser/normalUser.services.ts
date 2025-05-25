@@ -11,6 +11,7 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import Bookmark from '../bookmark/bookmark.mode';
 import Video from '../video/video.model';
 import { ENUM_LOCATION_TYPE } from '../../utilities/enum';
+import { deleteFileFromS3 } from '../../aws/deleteFromS3';
 const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   const id = userData.profileId;
   if (payload.email) {
@@ -31,7 +32,7 @@ const updateUserProfile = async (userData: JwtPayload, payload: any) => {
 
   if (payload.profile_image) {
     if (user.profile_image) {
-      unlinkFile(user.profile_image);
+      deleteFileFromS3(user.profile_image);
     }
   }
 
@@ -41,7 +42,7 @@ const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   }
 
   if (payload.videosToAdd) {
-    videos = [...videos, payload.videosToAdd];
+    videos = [...videos, ...payload.videosToAdd];
   }
 
   payload.videos = videos;
@@ -49,10 +50,7 @@ const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   // Handle removal of videos
   if (payload.videosToRemove && Array.isArray(payload.videosToRemove)) {
     for (const videoPath of payload.videosToRemove) {
-      unlinkFile(videoPath);
-
-      // Remove the video from the user's profile
-      // user.videos = user.videos.filter((video) => video !== videoPath);
+      deleteFileFromS3(videoPath);
     }
   }
 
