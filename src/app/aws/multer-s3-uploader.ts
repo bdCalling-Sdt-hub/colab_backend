@@ -35,10 +35,6 @@ export const uploadFile = () => {
       'thumbnail',
       'chat_images',
       'chat_videos',
-      'product_image',
-      'course_banner',
-      'banner',
-      'class_banner',
     ];
 
     if (file.fieldname === undefined) {
@@ -86,22 +82,20 @@ export const uploadFile = () => {
         uploadPath = 'uploads/images/category';
       } else if (file.fieldname === 'video') {
         uploadPath = 'uploads/videos';
-      } else if (file.fieldname === 'product_image') {
-        uploadPath = 'uploads/images/product_image';
       } else if (file.fieldname === 'chat_images') {
         uploadPath = 'uploads/images/chat_image';
       } else if (file.fieldname === 'chat_videos') {
         uploadPath = 'uploads/videos/chat_videos';
-      } else if (file.fieldname === 'banner') {
-        uploadPath = 'uploads/images/banner_image';
+      } else if (file.fieldname === 'team_logo') {
+        uploadPath = 'uploads/images/team_logo';
       } else if (file.fieldname === 'team_bg_image') {
         uploadPath = 'uploads/images/team_bg_image';
       } else if (file.fieldname === 'player_image') {
         uploadPath = 'uploads/images/player_image';
-      } else if (file.fieldname === 'class_banner') {
-        uploadPath = 'uploads/images/class_banner';
-      } else if (file.fieldname === 'course_banner') {
-        uploadPath = 'uploads/images/course_banner';
+      } else if (file.fieldname === 'player_bg_image') {
+        uploadPath = 'uploads/images/player_bg_image';
+      } else if (file.fieldname === 'reward_image') {
+        uploadPath = 'uploads/images/reward_image';
       } else if (file.fieldname === 'thumbnail') {
         uploadPath = 'uploads/images/thumbnail';
       } else {
@@ -131,19 +125,18 @@ export const uploadFile = () => {
   }).fields([
     { name: 'image', maxCount: 1 },
     { name: 'profile_image', maxCount: 1 },
-    { name: 'category_image', maxCount: 2 },
+    { name: 'category_image', maxCount: 1 },
     { name: 'sub_category_image', maxCount: 1 },
     { name: 'league_image', maxCount: 5 },
     { name: 'team_logo', maxCount: 1 },
     { name: 'team_bg_image', maxCount: 1 },
-    { name: 'class_banner', maxCount: 1 },
+    { name: 'player_image', maxCount: 1 },
     { name: 'player_bg_image', maxCount: 1 },
-    { name: 'banner', maxCount: 1 },
-    { name: 'course_banner', maxCount: 1 },
+    { name: 'reward_image', maxCount: 1 },
+    { name: 'thumbnail', maxCount: 3 },
     { name: 'video', maxCount: 5 },
     { name: 'chat_videos', maxCount: 2 },
     { name: 'chat_images', maxCount: 7 },
-    { name: 'product_image', maxCount: 7 },
   ]);
 
   return upload;
