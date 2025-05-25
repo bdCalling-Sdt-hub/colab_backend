@@ -12,8 +12,6 @@ import notFound from './app/middlewares/notFound';
 const app: Application = express();
 import sendContactUsEmail from './app/helper/sendContactUsEmail';
 import handleWebhook from './app/stripeManager/webhook';
-import Category from './app/modules/category/category.model';
-import Collaboration from './app/modules/collaboration/collaboration.model';
 import handleConnectedAccountWebhook from './app/stripeManager/connectedAccountWebhook';
 // web hook
 app.post(
