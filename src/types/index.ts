@@ -15,6 +15,7 @@ declare namespace Express {
       video?: File[];
       chat_images?: File[];
       chat_videos?: File[];
+      thumbnail?: File[];
     };
   }
 }

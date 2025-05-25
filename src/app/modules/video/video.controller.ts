@@ -1,20 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { getCloudFrontUrl } from '../../aws/multer-s3-uploader';
 import catchAsync from '../../utilities/catchasync';
 import sendResponse from '../../utilities/sendResponse';
 import VideoService from './video.service';
 
 const addVideo = catchAsync(async (req, res) => {
-  const { files } = req;
   let videos, thumbnails;
 
-  console.log('files', files);
-
-  if (files && typeof files === 'object' && 'video' in files) {
-    videos = files['video'].map((file) => file.path);
+  if (req.files?.video) {
+    videos = req.files.video.map((file: any) => {
+      return getCloudFrontUrl(file.key);
+    });
   }
-  if (files && typeof files === 'object' && 'thumbnail' in files) {
-    thumbnails = files['thumbnail'].map((file) => file.path);
+  if (req.files?.thumbnail) {
+    thumbnails = req.files.thumbnail.map((file: any) => {
+      return getCloudFrontUrl(file.key);
+    });
   }
-  console.log('vide', videos, thumbnails);
   req.body.video = videos;
   req.body.thumbnail = thumbnails;
   const result = await VideoService.AddVideo(req?.user.profileId, req.body);
@@ -27,12 +29,15 @@ const addVideo = catchAsync(async (req, res) => {
   });
 });
 const updateVideo = catchAsync(async (req, res) => {
-  const { files } = req;
-  if (files && typeof files === 'object' && 'video' in files) {
-    req.body.video = files['video'][0].path;
+  if (req.files?.video) {
+    req.body.video = req.files.video.map((file: any) => {
+      return getCloudFrontUrl(file.key);
+    });
   }
-  if (files && typeof files === 'object' && 'thumbnail' in files) {
-    req.body.thumbnail = files['thumbnail'][0].path;
+  if (req.files?.thumbnail) {
+    req.body.thumbnail = req.files.thumbnail.map((file: any) => {
+      return getCloudFrontUrl(file.key);
+    });
   }
   const result = await VideoService.updateVideo(
     req?.user.profileId,

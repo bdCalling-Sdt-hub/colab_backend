@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import auth from '../../middlewares/auth';
 import { USER_ROLE } from '../user/user.constant';
 import VideoController from './video.controller';
-import { uploadFile } from '../../helper/fileUploader';
+import { uploadFile } from '../../aws/multer-s3-uploader';
 
 const router = express.Router();
 

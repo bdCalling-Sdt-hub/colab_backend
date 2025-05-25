@@ -1,8 +1,8 @@
 import httpStatus from 'http-status';
 import AppError from '../../error/appError';
-import unlinkFile from '../../helper/unlinkFile';
 import { IVideo } from './video.interface';
 import Video from './video.model';
+import { deleteFileFromS3 } from '../../aws/deleteFromS3';
 
 const AddVideo = async (profileId: string, payload: IVideo) => {
   console.log('payload', payload);
@@ -48,8 +48,8 @@ const updateVideo = async (
   });
 
   if (payload.video && payload.thumbnail) {
-    unlinkFile(videoData.video);
-    unlinkFile(videoData.thumbnail);
+    deleteFileFromS3(videoData.video);
+    deleteFileFromS3(videoData.thumbnail);
   }
   return result;
 };
