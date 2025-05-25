@@ -13,6 +13,8 @@ declare namespace Express {
       class_banner?: File[];
       category_image?: File[];
       video?: File[];
+      chat_images?: File[];
+      chat_videos?: File[];
     };
   }
 }
