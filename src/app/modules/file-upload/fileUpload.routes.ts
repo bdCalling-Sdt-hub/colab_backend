@@ -1,8 +1,9 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { USER_ROLE } from '../user/user.constant';
-import { uploadFile } from '../../helper/fileUploader';
+// import { uploadFile } from '../../helper/fileUploader';
 import auth from '../../middlewares/auth';
 import FileUploadController from './fileUpload.controller';
+import { uploadFile } from '../../aws/multer-s3-uploader';
 
 const router = express.Router();
 
