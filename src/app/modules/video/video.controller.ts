@@ -29,16 +29,26 @@ const addVideo = catchAsync(async (req, res) => {
   });
 });
 const updateVideo = catchAsync(async (req, res) => {
+  // if (req.files?.video) {
+  //   req.body.video = req.files.video.map((file: any) => {
+  //     return getCloudFrontUrl(file.key);
+  //   });
+  // }
+  // if (req.files?.thumbnail) {
+  //   req.body.thumbnail = req.files.thumbnail.map((file: any) => {
+  //     return getCloudFrontUrl(file.key);
+  //   });
+  // }
+
+  const file: any = req.files?.video;
   if (req.files?.video) {
-    req.body.video = req.files.video.map((file: any) => {
-      return getCloudFrontUrl(file.key);
-    });
+    req.body.video = getCloudFrontUrl(file[0].key);
   }
+  const file2: any = req.files?.thumbnail;
   if (req.files?.thumbnail) {
-    req.body.thumbnail = req.files.thumbnail.map((file: any) => {
-      return getCloudFrontUrl(file.key);
-    });
+    req.body.thumbnail = getCloudFrontUrl(file2[0].key);
   }
+
   const result = await VideoService.updateVideo(
     req?.user.profileId,
     req.params.id,

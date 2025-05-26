@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post(
   '/upload-files',
-  // auth(USER_ROLE.superAdmin, USER_ROLE.user),
+  auth(USER_ROLE.superAdmin, USER_ROLE.user),
   uploadFile(),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body.data) {

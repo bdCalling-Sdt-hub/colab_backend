@@ -5,7 +5,6 @@ import Video from './video.model';
 import { deleteFileFromS3 } from '../../aws/deleteFromS3';
 
 const AddVideo = async (profileId: string, payload: IVideo) => {
-  console.log('payload', payload);
   if (payload.video.length < 3 || payload.thumbnail.length < 3) {
     throw new AppError(
       httpStatus.BAD_REQUEST,

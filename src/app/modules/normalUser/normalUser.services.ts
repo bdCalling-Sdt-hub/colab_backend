@@ -42,7 +42,9 @@ const updateUserProfile = async (userData: JwtPayload, payload: any) => {
   }
 
   if (payload.videosToAdd) {
+    console.log('videos', videos);
     videos = [...videos, ...payload.videosToAdd];
+    console.log('after videos', videos);
   }
 
   payload.videos = videos;
